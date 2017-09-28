@@ -26,4 +26,6 @@ public interface IPointActivityInfoService {
 	
 	public List<PointActivityInfo> find(PointActivityInfo activityInfo) throws RepsException;
 	
+	public List<PointActivityInfo> findNotAudit(PointActivityInfo activityInfo) throws RepsException;
+	
 }

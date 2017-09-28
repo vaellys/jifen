@@ -5,9 +5,7 @@ import static com.reps.core.util.DateUtil.getDateFromStr;
 import static com.reps.jifen.entity.enums.AuditStatus.REJECTED;
 import static com.reps.jifen.entity.enums.CategoryType.ACTIVITY;
 import static com.reps.jifen.entity.enums.ParticipateStatus.PARTICIPATED;
-import static com.reps.jifen.entity.enums.RewardStatus.PUBLISHED;
-import static com.reps.jifen.entity.enums.RewardStatus.SOLD_OUT;
-import static com.reps.jifen.entity.enums.RewardStatus.UN_PUBLISH;
+import static com.reps.jifen.entity.enums.ActivityStatus.*;
 import static com.reps.jifen.entity.enums.ValidRecord.VALID;
 import static com.reps.jifen.util.ActivityUtil.doPosts;
 
@@ -25,9 +23,9 @@ import org.springframework.stereotype.Service;
 import com.reps.core.exception.RepsException;
 import com.reps.core.orm.ListResult;
 import com.reps.core.util.StringUtil;
-import com.reps.jifen.dao.PointRewardDao;
+import com.reps.jifen.dao.ActivityRewardDao;
+import com.reps.jifen.entity.ActivityReward;
 import com.reps.jifen.entity.PointActivityInfo;
-import com.reps.jifen.entity.PointReward;
 import com.reps.jifen.entity.RewardCategory;
 import com.reps.jifen.service.IActivityRewardService;
 import com.reps.jifen.service.IPointActivityInfoService;
@@ -46,13 +44,13 @@ public class ActivityRewardServiceImpl implements IActivityRewardService {
 	private static final Short CANCEL_ACTIVITY = 0;
 
 	@Autowired
-	PointRewardDao dao;
+	ActivityRewardDao dao;
 	
 	@Autowired
 	IPointActivityInfoService pointActivityInfoService;
 	
 	@Override
-	public void save(PointReward jfReward) throws RepsException{
+	public void save(ActivityReward jfReward) throws RepsException{
 		//设置活动开始时间
 		Date beginTime = getBeginTimeDisp(jfReward);
 		//设置活动结束时间
@@ -78,11 +76,11 @@ public class ActivityRewardServiceImpl implements IActivityRewardService {
 	}
 
 	@Override
-	public void delete(PointReward jfReward) throws RepsException{
+	public void delete(ActivityReward jfReward) throws RepsException{
 		if(null == jfReward) {
 			throw new RepsException("删除异常");
 		}
-		Integer exchangedCount = jfReward.getExchangedCount();
+		Integer exchangedCount = jfReward.getParticipatedCount();
 		if(null != exchangedCount && exchangedCount.intValue() > 0) {
 			throw new RepsException("删除异常:该活动有人参与过不能删除");
 		}
@@ -90,11 +88,11 @@ public class ActivityRewardServiceImpl implements IActivityRewardService {
 	}
 
 	@Override
-	public void update(PointReward jfReward) throws RepsException{
+	public void update(ActivityReward jfReward) throws RepsException{
 		if (jfReward == null) {
 			throw new RepsException("参数异常");
 		}
-		PointReward pointReward = this.get(jfReward.getId());
+		ActivityReward pointReward = this.get(jfReward.getId());
 		RewardCategory jfRewardCategory = jfReward.getJfRewardCategory();
 		if(null != jfRewardCategory) {
 			pointReward.setJfRewardCategory(jfRewardCategory);
@@ -134,10 +132,6 @@ public class ActivityRewardServiceImpl implements IActivityRewardService {
 		if(null != participatedCount) {
 			pointReward.setParticipatedCount(participatedCount);
 		}
-		Integer exchangedCount = jfReward.getExchangedCount();
-		if(null != exchangedCount) {
-			pointReward.setExchangedCount(exchangedCount);
-		}
 		Short validRecord = jfReward.getValidRecord();
 	    if(null != validRecord) {
 	    	pointReward.setValidRecord(validRecord);
@@ -150,11 +144,11 @@ public class ActivityRewardServiceImpl implements IActivityRewardService {
 	}
 
 	@Override
-	public PointReward get(String id) throws RepsException{
+	public ActivityReward get(String id) throws RepsException{
 		if(StringUtil.isBlank(id)) {
 			throw new RepsException("查询异常:活动ID不能为空");
 		}
-		PointReward pointReward = dao.get(id);
+		ActivityReward pointReward = dao.get(id);
 		if(null == pointReward) {
 			throw new RepsException("查询异常:该活动不存在");
 		}
@@ -162,13 +156,13 @@ public class ActivityRewardServiceImpl implements IActivityRewardService {
 	}
 
 	@Override
-	public ListResult<PointReward> query(int start, int pagesize, PointReward jfReward) {
+	public ListResult<ActivityReward> query(int start, int pagesize, ActivityReward jfReward) {
 		//设置截止时间
 		jfReward.setFinishTime(getFinishTimeDisp(jfReward));
 		return dao.query(start, pagesize, jfReward);
 	}
 
-	private Date getFinishTimeDisp(PointReward jfReward) {
+	private Date getFinishTimeDisp(ActivityReward jfReward) {
 		String finishTimeDisp = jfReward.getFinishTimeDisp();
 		if(StringUtil.isNotBlank(finishTimeDisp)) {
 			Date finishTime = getDateFromStr(finishTimeDisp, "yyyy-MM-dd");
@@ -178,7 +172,7 @@ public class ActivityRewardServiceImpl implements IActivityRewardService {
 		}
 	}
 
-	private Date getBeginTimeDisp(PointReward jfReward) {
+	private Date getBeginTimeDisp(ActivityReward jfReward) {
 		String beginTimeDisp = jfReward.getBeginTimeDisp();
 		if(StringUtil.isNotBlank(beginTimeDisp)) {
 			Date beginTime = getDateFromStr(beginTimeDisp, "yyyy-MM-dd");
@@ -188,7 +182,7 @@ public class ActivityRewardServiceImpl implements IActivityRewardService {
 		}
 	}
 	
-	private Date getEndTimeDisp(PointReward jfReward) {
+	private Date getEndTimeDisp(ActivityReward jfReward) {
 		String endTimeDisp = jfReward.getEndTimeDisp();
 		if(StringUtil.isNotBlank(endTimeDisp)) {
 			Date endTime = getDateFromStr(endTimeDisp, "yyyy-MM-dd");
@@ -199,7 +193,7 @@ public class ActivityRewardServiceImpl implements IActivityRewardService {
 	}
 	
 	@Override
-	public List<PointReward> getActivityRewardOfCategory(String cid) {
+	public List<ActivityReward> getActivityRewardOfCategory(String cid) {
 		return dao.getRewardOfCategory(cid);
 	}
 
@@ -216,7 +210,7 @@ public class ActivityRewardServiceImpl implements IActivityRewardService {
 		if(null == status) {
 			throw new RepsException("活动状态不能为空");
 		}
-		PointReward pointReward = get(id);
+		ActivityReward pointReward = get(id);
 		//检查截止时间
 		checkFinishTime(pointReward);
 		//取消活动
@@ -226,13 +220,13 @@ public class ActivityRewardServiceImpl implements IActivityRewardService {
 			activityInfo.setAuditStatus(REJECTED.getId());
 			//取消活动时，此人为参与中，审核状态为未审核和审核通过，这些人返还积分
 			activityInfo.setIsParticipate(PARTICIPATED.getId());
-			List<PointActivityInfo> list = pointActivityInfoService.find(activityInfo);
+			List<PointActivityInfo> list = pointActivityInfoService.findNotAudit(activityInfo);
 			for (PointActivityInfo pointActivityInfo : list) {
 				this.cancelActivity(pointActivityInfo, pointReward.getPoints(), serverPath);
 			}
 		}
 		//修改活动状态
-		PointReward jfReward = new PointReward();
+		ActivityReward jfReward = new ActivityReward();
 		jfReward.setId(id);
 		jfReward.setIsShown(status);
 		this.update(jfReward );
@@ -258,13 +252,13 @@ public class ActivityRewardServiceImpl implements IActivityRewardService {
 		}
 		String[] idArray = ids.split(",");
 		for (String id : idArray) {
-			PointReward pointReward = this.get(id);
+			ActivityReward pointReward = this.get(id);
 			checkFinishTime(pointReward);
 		}
 		dao.batchUpdate(ids, status);
 	}
 
-	private void checkFinishTime(PointReward pointReward) throws RepsException {
+	private void checkFinishTime(ActivityReward pointReward) throws RepsException {
 		Date finishTime = pointReward.getFinishTime();
 		if(null == finishTime) {
 			throw new RepsException("截止时间为空");
@@ -278,20 +272,20 @@ public class ActivityRewardServiceImpl implements IActivityRewardService {
 //	@Scheduled(cron = "*/20 * * * * ?")
 	public void activityExpired() {
 		try {
-			PointReward jfReward = new PointReward();
+			ActivityReward jfReward = new ActivityReward();
 			RewardCategory category = new RewardCategory();
 			category.setType(ACTIVITY.getIndex());
 			jfReward.setIsShown(PUBLISHED.getIndex());
 			jfReward.setJfRewardCategory(category);
-			List<PointReward> activityList = getActivityRewardByCategoryType(jfReward);
+			List<ActivityReward> activityList = getActivityRewardByCategoryType(jfReward);
 			//获取当前系统时间
 			long currentTime = getDateFromStr(format(new Date(), "yyyy-MM-dd"), "yyyy-MM-dd").getTime();
-			for (PointReward activity : activityList) {
+			for (ActivityReward activity : activityList) {
 				//获取活动过期时间
 				long expireTime = activity.getFinishTime().getTime();
 				if(expireTime - currentTime < 0) {
 					try {
-						dao.batchUpdate(activity.getId(), SOLD_OUT.getIndex());
+						dao.batchUpdate(activity.getId(), COMPLETED.getIndex());
 					} catch (Exception e) {
 						logger.error("活动过期状态更新失败,该活动信息为:活动ID " + jfReward.getId() + ", 活动状态  " + jfReward.getIsShown() + ", 活动截止时间 " + jfReward.getFinishTime());
 					}
@@ -304,12 +298,12 @@ public class ActivityRewardServiceImpl implements IActivityRewardService {
 	}
 
 	@Override
-	public List<PointReward> getActivityRewardByCategoryType(PointReward jfReward) {
+	public List<ActivityReward> getActivityRewardByCategoryType(ActivityReward jfReward) {
 		return dao.getRewardByCategoryType(jfReward);
 	}
 	
 	@Override
-	public void delay(PointReward jfReward) throws RepsException {
+	public void delay(ActivityReward jfReward) throws RepsException {
 		if(null == jfReward) {
 			throw new RepsException("活动数据异常");
 		}

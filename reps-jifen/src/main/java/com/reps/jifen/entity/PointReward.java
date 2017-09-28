@@ -62,41 +62,13 @@ public class PointReward extends IdEntity implements Serializable {
 	@Column(name = "create_time")
 	private Date createTime;
 	
-	/** 活动开始时间 */
-	@Column(name = "begin_time")
-	private Date beginTime;
-	
-	/** 结束时间 */
-	@Column(name = "end_time")
-	private Date endTime;
-	
-	/** 截止时间 */
-	@Column(name = "finish_time")
-	private Date finishTime;
-	
 	/** 兑换物品数量 */
 	@Column(name = "exchanged_count")
 	private Integer exchangedCount;
 	
-	/** 参与人数 */
-	@Column(name = "participated_count")
-	private Integer participatedCount;
-	
 	/** 删除标识 1：有效（默认值），9：删除 */
 	@Column(name = "valid_record")
 	private Short validRecord;
-	
-	@Transient
-	@JsonIgnore
-	private String finishTimeDisp;
-	
-	@Transient
-	@JsonIgnore
-	private String beginTimeDisp;
-	
-	@Transient
-	@JsonIgnore
-	private String endTimeDisp;
 	
 	/** 积分开始 */
 	@Transient
@@ -215,22 +187,6 @@ public class PointReward extends IdEntity implements Serializable {
 		this.createTime = createTime;
 	}
 
-	public Date getFinishTime() {
-		return finishTime;
-	}
-
-	public void setFinishTime(Date finishTime) {
-		this.finishTime = finishTime;
-	}
-
-	public String getFinishTimeDisp() {
-		return finishTimeDisp;
-	}
-
-	public void setFinishTimeDisp(String finishTimeDisp) {
-		this.finishTimeDisp = finishTimeDisp;
-	}
-
 	public String getRewardUrlOne() {
 		return rewardUrlOne;
 	}
@@ -311,14 +267,6 @@ public class PointReward extends IdEntity implements Serializable {
 		this.exchangedCount = exchangedCount;
 	}
 
-	public Integer getParticipatedCount() {
-		return participatedCount;
-	}
-
-	public void setParticipatedCount(Integer participatedCount) {
-		this.participatedCount = participatedCount;
-	}
-
 	public Short getValidRecord() {
 		return validRecord;
 	}
@@ -335,36 +283,4 @@ public class PointReward extends IdEntity implements Serializable {
 		this.categoryName = categoryName;
 	}
 
-	public Date getBeginTime() {
-		return beginTime;
-	}
-
-	public void setBeginTime(Date beginTime) {
-		this.beginTime = beginTime;
-	}
-
-	public Date getEndTime() {
-		return endTime;
-	}
-
-	public void setEndTime(Date endTime) {
-		this.endTime = endTime;
-	}
-
-	public String getBeginTimeDisp() {
-		return beginTimeDisp;
-	}
-
-	public void setBeginTimeDisp(String beginTimeDisp) {
-		this.beginTimeDisp = beginTimeDisp;
-	}
-
-	public String getEndTimeDisp() {
-		return endTimeDisp;
-	}
-
-	public void setEndTimeDisp(String endTimeDisp) {
-		this.endTimeDisp = endTimeDisp;
-	}
-	
 }

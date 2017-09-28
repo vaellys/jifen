@@ -1,6 +1,8 @@
 package com.reps.jifen.action;
 
-import static com.reps.jifen.entity.enums.CategoryType.*;
+import static com.reps.jifen.entity.enums.CategoryType.ACTIVITY;
+import static com.reps.jifen.entity.enums.CategoryType.REWARD;
+import static com.reps.jifen.entity.enums.CategoryType.getCategoryType;
 
 import java.util.List;
 
@@ -19,6 +21,7 @@ import com.reps.core.orm.ListResult;
 import com.reps.core.util.StringUtil;
 import com.reps.core.web.AjaxStatus;
 import com.reps.core.web.BaseAction;
+import com.reps.jifen.entity.ActivityReward;
 import com.reps.jifen.entity.PointReward;
 import com.reps.jifen.entity.RewardCategory;
 import com.reps.jifen.service.IActivityRewardService;
@@ -170,7 +173,7 @@ public class RewardCategoryAction extends BaseAction {
 			reward.setCategoryId(id);
 			reward.setJfRewardCategory(category);
 			String type = category.getType();
-			List<PointReward> activityRewardList = jfActivityRewardService.getActivityRewardOfCategory(id);
+			List<ActivityReward> activityRewardList = jfActivityRewardService.getActivityRewardOfCategory(id);
 			if(null != activityRewardList && 0 != activityRewardList.size() && ACTIVITY.getIndex().equals(type)) {
 				return ajax(AjaxStatus.ERROR, "该分类下有活动不能删除！");
 			}

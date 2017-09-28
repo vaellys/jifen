@@ -33,7 +33,7 @@ public class PointActivityInfo extends IdEntity implements Serializable{
 	@JsonIgnore
     @ManyToOne(cascade = {})
 	@JoinColumn(name = "reward_id", insertable = false, updatable = false)
-	private PointReward pointReward;
+	private ActivityReward pointReward;
 		
 	/** 学生ID */
 	@Column(name = "student_id")
@@ -169,11 +169,11 @@ public class PointActivityInfo extends IdEntity implements Serializable{
 		this.createTime = createTime;
 	}
 
-	public PointReward getPointReward() {
+	public ActivityReward getPointReward() {
 		return pointReward;
 	}
 
-	public void setPointReward(PointReward pointReward) {
+	public void setPointReward(ActivityReward pointReward) {
 		this.pointReward = pointReward;
 	}
 

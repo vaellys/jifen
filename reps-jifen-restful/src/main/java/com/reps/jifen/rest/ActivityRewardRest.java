@@ -24,9 +24,10 @@ import com.reps.core.restful.RestResponse;
 import com.reps.core.restful.RestResponseStatus;
 import com.reps.core.util.StringUtil;
 import com.reps.jifen.constant.UrlConstant;
+import com.reps.jifen.entity.ActivityReward;
 import com.reps.jifen.entity.PointActivityInfo;
 import com.reps.jifen.entity.PointReward;
-import com.reps.jifen.entity.enums.RewardStatus;
+import static com.reps.jifen.entity.enums.ActivityStatus.*;
 import com.reps.jifen.service.IActivityRewardService;
 import com.reps.jifen.service.IPointActivityInfoService;
 import com.reps.jifen.util.ConvertUrlUtil;
@@ -86,9 +87,9 @@ public class ActivityRewardRest extends RestBaseController {
 			//设置学生ID
 			activityInfo.setStudentId(personId);
 			//查询活动信息
-			PointReward activity = activityRewardService.get(rewardId);
+			ActivityReward activity = activityRewardService.get(rewardId);
 			Short isShown = activity.getIsShown();
-			if(RewardStatus.PUBLISHED.getIndex().shortValue() != isShown.shortValue()) {
+			if(PUBLISHED.getIndex().shortValue() != isShown.shortValue()) {
 				throw new RepsException("该活动不是发布状态");
 			}
 			//构造请求积分收集参数MAP
@@ -163,7 +164,7 @@ public class ActivityRewardRest extends RestBaseController {
 			//设置学生ID
 			activityInfo.setStudentId(personId);
 			//查询活动信息
-			PointReward activity = activityRewardService.get(rewardId);
+			ActivityReward activity = activityRewardService.get(rewardId);
 			if(null == activity) {
 				throw new RepsException("取消活动异常:该活动不存在");
 			}

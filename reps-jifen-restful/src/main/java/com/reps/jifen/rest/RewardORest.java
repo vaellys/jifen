@@ -43,7 +43,7 @@ public class RewardORest extends RestBaseController {
 	@RequestMapping(value = "/list")
 	public RestResponse<ListResult<PointReward>> list(PointReward jfReward, Integer pageIndex, Integer pageSize) {
 		try {
-			setReward(jfReward, REWARD.getIndex());
+			setReward(jfReward);
 			pageSize = cps(pageSize);
 			ListResult<PointReward> result = jfRewardService.query(getStartIndex(pageIndex, pageSize), pageSize, jfReward);
 			if(null == result) {

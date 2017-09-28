@@ -16,8 +16,8 @@ import com.reps.core.exception.RepsException;
 import com.reps.core.orm.ListResult;
 import com.reps.core.util.StringUtil;
 import com.reps.jifen.dao.ActivityInfoDao;
+import com.reps.jifen.entity.ActivityReward;
 import com.reps.jifen.entity.PointActivityInfo;
-import com.reps.jifen.entity.PointReward;
 import com.reps.jifen.entity.enums.AuditStatus;
 import com.reps.jifen.service.IActivityRewardService;
 import com.reps.jifen.service.IPointActivityInfoService;
@@ -67,7 +67,7 @@ public class PointActivityInfoServiceImpl implements IPointActivityInfoService {
 			update(pointActivityInfo);
 		}
 		//更新参与人数
-		PointReward pointReward = activityRewardService.get(rewardId);
+		ActivityReward pointReward = activityRewardService.get(rewardId);
 		Integer participatedCount = pointReward.getParticipatedCount();
 		pointReward.setParticipatedCount((null == participatedCount ? 0 : participatedCount) + 1);
 		activityRewardService.update(pointReward);
@@ -143,7 +143,7 @@ public class PointActivityInfoServiceImpl implements IPointActivityInfoService {
 		activityInfo.setIsParticipate(CANCEL_PARTICIPATE.getId());
 		this.update(activityInfo);
 		//更新活动表，已参与人数
-		PointReward jfReward = activityRewardService.get(activityInfo.getRewardId());
+		ActivityReward jfReward = activityRewardService.get(activityInfo.getRewardId());
 		Integer participatedCount = jfReward.getParticipatedCount();
 		jfReward.setParticipatedCount(null == participatedCount ? 0 : participatedCount - 1);
 		activityRewardService.update(jfReward);
@@ -193,7 +193,7 @@ public class PointActivityInfoServiceImpl implements IPointActivityInfoService {
 		if(StringUtil.isBlank(id) || StringUtil.isBlank(rewardId)) {
 			throw new RepsException("活动参与记录数据异常");
 		}
-		PointReward pointReward = activityRewardService.get(rewardId);
+		ActivityReward pointReward = activityRewardService.get(rewardId);
 		Integer points = pointReward.getPoints();
 		if(null == points) {
 			throw new RepsException("该活动数据异常");
@@ -202,19 +202,28 @@ public class PointActivityInfoServiceImpl implements IPointActivityInfoService {
 			//请求mongodb 修改个人积分，保存积分日志
 			doPosts(studentId, rewardId, points, serverPath);
 			//修改活动记录表和活动信息表状态
-			cancelParticipate(pointActivityInfo);
+			cancelParticipate(buildParam(activityInfo, auditStatus, studentId, rewardId));
 		}
+		update(buildParam(activityInfo, auditStatus, studentId, rewardId));
+	}
+
+	private PointActivityInfo buildParam(PointActivityInfo activityInfo, Short auditStatus, String studentId, String rewardId) {
 		PointActivityInfo info = new PointActivityInfo();
 		info.setAuditStatus(auditStatus);
 		info.setAuditOpinion(activityInfo.getAuditOpinion());
 		info.setStudentId(studentId);
 		info.setRewardId(rewardId);
-		update(info);
+		return info;
 	}
 	
 	@Override
 	public List<PointActivityInfo> find(PointActivityInfo activityInfo) throws RepsException {
 		return dao.find(activityInfo);
+	}
+
+	@Override
+	public List<PointActivityInfo> findNotAudit(PointActivityInfo activityInfo) throws RepsException {
+		return dao.findNotAudit(activityInfo);
 	}
 
 }

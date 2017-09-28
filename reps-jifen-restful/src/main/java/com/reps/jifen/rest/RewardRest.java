@@ -1,6 +1,5 @@
 package com.reps.jifen.rest;
 
-import static com.reps.jifen.entity.enums.CategoryType.REWARD;
 import static com.reps.jifen.util.PageUtil.cps;
 import static com.reps.jifen.util.PageUtil.getStartIndex;
 import static com.reps.jifen.util.RewardUtil.setPictureUrls;
@@ -44,7 +43,7 @@ public class RewardRest extends RestBaseController {
 			if(null == points) {
 				throw new RepsException("个人积分不能为空");
 			}
-			setReward(jfReward, REWARD.getIndex());
+			setReward(jfReward);
 			pageSize = cps(pageSize);
 			ListResult<PointReward> result = jfRewardService.query(getStartIndex(pageIndex, pageSize), pageSize, jfReward);
 			if(null == result) {

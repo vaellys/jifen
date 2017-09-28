@@ -10,6 +10,7 @@ import java.util.Map;
 
 import com.reps.core.exception.RepsException;
 import com.reps.core.util.StringUtil;
+import com.reps.jifen.entity.ActivityReward;
 import com.reps.jifen.entity.PointReward;
 import com.reps.jifen.entity.RewardCategory;
 
@@ -41,8 +42,8 @@ public class RewardUtil {
 	 * @param jfReward
 	 * @param type
 	 */
-	public static void setReward(PointReward jfReward, String type) {
-		setRewardType(jfReward, type);
+	public static void setReward(PointReward jfReward) {
+		jfReward.setIsShown(PUBLISHED.getIndex());
 		String sortField = jfReward.getSortField();
 		// 获取排序字段，默认按发布时间进行排序
 		if (StringUtil.isBlank(sortField) || !SORT_FIELD_MAP.containsKey(sortField)) {
@@ -55,7 +56,27 @@ public class RewardUtil {
 			jfReward.setSortOrder(DESC.name());
 		}
 	}
-
+	
+	/**
+	 * 设置活动属性
+	 * 
+	 * @param jfReward
+	 */
+	public static void setReward(ActivityReward jfReward) {
+		jfReward.setIsShown(PUBLISHED.getIndex());
+		String sortField = jfReward.getSortField();
+		// 获取排序字段，默认按发布时间进行排序
+		if (StringUtil.isBlank(sortField) || !SORT_FIELD_MAP.containsKey(sortField)) {
+			jfReward.setSortField("createTime");
+		} else {
+			jfReward.setSortField(SORT_FIELD_MAP.get(sortField));
+		}
+		String sortOrder = jfReward.getSortOrder();
+		if (!ASC.name().equalsIgnoreCase(sortOrder) && !DESC.name().equalsIgnoreCase(sortOrder)) {
+			jfReward.setSortOrder(DESC.name());
+		}
+	}
+	
 	public static void setRewardType(PointReward jfReward, String type) {
 		RewardCategory jfRewardCategory = new RewardCategory();
 		jfRewardCategory.setType(type);
@@ -79,6 +100,17 @@ public class RewardUtil {
 				}else {
 					jfReward.setPicture(uri);
 				}
+			}
+		}
+	}
+	
+	public static void setActivityPictureUrls(List<ActivityReward> list, String imageServerPath) throws RepsException{
+		for (ActivityReward jfReward : list) {
+			String picture = jfReward.getPicture();
+			if(StringUtil.isNotBlank(picture)) {
+				jfReward.setPicture(imageServerPath + picture);
+			}else {
+				jfReward.setPicture(picture);
 			}
 		}
 	}

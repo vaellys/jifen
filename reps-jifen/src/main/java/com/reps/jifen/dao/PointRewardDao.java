@@ -2,7 +2,6 @@ package com.reps.jifen.dao;
 
 import static com.reps.jifen.util.SqlUtil.formatSql;
 
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
@@ -64,10 +63,6 @@ public class PointRewardDao {
 			String type = null != jfRewardCategory ? jfRewardCategory.getType() : "";
 			if (StringUtil.isNotBlank(type)) {
 				dc.add(Restrictions.eq("t.type", type));
-			}
-			Date finishTime = jfReward.getFinishTime();
-			if (null != finishTime) {
-				dc.add(Restrictions.le("finishTime", finishTime));
 			}
 			// 库存量查询
 			Integer numbers = jfReward.getNumbers();

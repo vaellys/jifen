@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.reps.core.exception.RepsException;
 import com.reps.core.orm.ListResult;
-import com.reps.jifen.entity.PointReward;
+import com.reps.jifen.entity.ActivityReward;
 
 /**
  * 活动奖品相关操作
@@ -19,14 +19,14 @@ public interface IActivityRewardService {
 	 * 
 	 * @param jfReward
 	 */
-	public void save(PointReward jfReward) throws RepsException;
+	public void save(ActivityReward jfReward) throws RepsException;
 
 	/**
 	 * 删除活动
 	 * 
 	 * @param jfReward
 	 */
-	public void delete(PointReward jfReward) throws RepsException;
+	public void delete(ActivityReward jfReward) throws RepsException;
 
 	/**
 	 * 修改活动
@@ -34,13 +34,13 @@ public interface IActivityRewardService {
 	 * @param jfReward
 	 * @throws RepsException 
 	 */
-	public void update(PointReward jfReward) throws RepsException;
+	public void update(ActivityReward jfReward) throws RepsException;
 	
 	/**
 	 * 活动延期
 	 * @param jfReward
 	 */
-	public void delay(PointReward jfReward) throws RepsException;
+	public void delay(ActivityReward jfReward) throws RepsException;
 
 	/**
 	 * 通过指定id获得对象
@@ -48,7 +48,7 @@ public interface IActivityRewardService {
 	 * @param id
 	 * @return JfReward
 	 */
-	public PointReward get(String id) throws RepsException;
+	public ActivityReward get(String id) throws RepsException;
 
 	/**
 	 * 分页查询
@@ -58,7 +58,7 @@ public interface IActivityRewardService {
 	 * @param jfReward
 	 * @return ListResult<JfReward>
 	 */
-	ListResult<PointReward> query(int start, int pagesize, PointReward jfReward);
+	ListResult<ActivityReward> query(int start, int pagesize, ActivityReward jfReward);
 
 	/**
 	 * 根据奖品分类id，得到该分类下的所有活动
@@ -66,7 +66,7 @@ public interface IActivityRewardService {
 	 * @param cid 分类id
 	 * @return JfReward
 	 */
-	public List<PointReward> getActivityRewardOfCategory(String cid);
+	public List<ActivityReward> getActivityRewardOfCategory(String cid);
 
 	/**
 	 * 批量删除活动
@@ -86,7 +86,7 @@ public interface IActivityRewardService {
 	 * @param jfReward
 	 * @return List<JfReward>
 	 */
-	public List<PointReward> getActivityRewardByCategoryType(PointReward jfReward);
+	public List<ActivityReward> getActivityRewardByCategoryType(ActivityReward jfReward);
 
 	/**
 	 * 根据兑截止换时间来判断活动是否下架,设置为已下架 2

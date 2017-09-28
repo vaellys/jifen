@@ -1,5 +1,8 @@
 package com.reps.jifen.dao;
 
+import static com.reps.jifen.entity.enums.AuditStatus.REJECTED;
+import static com.reps.jifen.entity.enums.ParticipateStatus.PARTICIPATED;
+
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -14,9 +17,6 @@ import com.reps.core.orm.IGenericDao;
 import com.reps.core.orm.ListResult;
 import com.reps.core.util.StringUtil;
 import com.reps.jifen.entity.PointActivityInfo;
-import static com.reps.jifen.entity.enums.AuditStatus.*;
-
-import static com.reps.jifen.entity.enums.ParticipateStatus.*;
 import com.reps.school.entity.School;
 import com.reps.school.entity.Student;
 import com.reps.system.entity.Organize;
@@ -108,6 +108,21 @@ public class ActivityInfoDao {
 			 if(StringUtil.isNotBlank(rewardId)) {
 				 dc.add(Restrictions.eq("rewardId", rewardId));
 			 }
+			 String studentId = activityInfo.getStudentId();
+			 if(StringUtil.isNotBlank(studentId)) {
+				 dc.add(Restrictions.eq("studentId", studentId));
+			 }
+		 }
+	     return dao.findByCriteria(dc);
+	}
+	
+	public List<PointActivityInfo> findNotAudit(PointActivityInfo activityInfo) {
+		 DetachedCriteria dc = DetachedCriteria.forClass(PointActivityInfo.class);
+		 if(null != activityInfo) {
+			 String rewardId = activityInfo.getRewardId();
+			 if(StringUtil.isNotBlank(rewardId)) {
+				 dc.add(Restrictions.eq("rewardId", rewardId));
+			 }
 			 Short isParticipate = activityInfo.getIsParticipate();
 			 if(null != isParticipate) {
 				 dc.add(Restrictions.eq("isParticipate", isParticipate));
@@ -117,10 +132,6 @@ public class ActivityInfoDao {
 				 if(REJECTED.getId().shortValue() == auditStatus.shortValue()) {
 					 dc.add(Restrictions.ne("auditStatus", auditStatus));
 				 }
-			 }
-			 String studentId = activityInfo.getStudentId();
-			 if(StringUtil.isNotBlank(studentId)) {
-				 dc.add(Restrictions.eq("studentId", studentId));
 			 }
 		 }
 	     return dao.findByCriteria(dc);

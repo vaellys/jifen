@@ -24,8 +24,8 @@ import com.reps.core.util.DateUtil;
 import com.reps.core.util.StringUtil;
 import com.reps.core.web.AjaxStatus;
 import com.reps.core.web.BaseAction;
+import com.reps.jifen.entity.ActivityReward;
 import com.reps.jifen.entity.PointActivityInfo;
-import com.reps.jifen.entity.PointReward;
 import com.reps.jifen.entity.RewardCategory;
 import com.reps.jifen.service.IActivityRewardService;
 import com.reps.jifen.service.IPointActivityInfoService;
@@ -62,7 +62,7 @@ public class ActivityRewardAction extends BaseAction {
 	 * @return Object
 	 */
 	@RequestMapping(value = "/list")
-	public Object list(Pagination pager, PointReward jfReward) {
+	public Object list(Pagination pager, ActivityReward jfReward) {
 		ModelAndView mav = getModelAndView("/jifen/activityreward/list");
 
 		RewardCategory jfRewardCategory = jfReward.getJfRewardCategory();
@@ -72,7 +72,7 @@ public class ActivityRewardAction extends BaseAction {
 		}
 		// 设置活动类别
 		jfRewardCategory.setType(ACTIVITY.getIndex());
-		ListResult<PointReward> listResult = jfActivityRewardService.query(pager.getStartRow(), pager.getPageSize(), jfReward);
+		ListResult<ActivityReward> listResult = jfActivityRewardService.query(pager.getStartRow(), pager.getPageSize(), jfReward);
 		// 查询活动类型
 		List<RewardCategory> categoryList;
 		try {
@@ -119,7 +119,7 @@ public class ActivityRewardAction extends BaseAction {
 	 */
 	@RequestMapping(value = "/add")
 	@ResponseBody
-	public Object add(PointReward jfReward) {
+	public Object add(ActivityReward jfReward) {
 		try {
 			if (jfReward == null) {
 				throw new RepsException("数据不完整");
@@ -166,7 +166,7 @@ public class ActivityRewardAction extends BaseAction {
 	public Object toEdit(String id) {
 		try {
 			ModelAndView mav = getModelAndView("/jifen/activityreward/edit");
-			PointReward jfReward = jfActivityRewardService.get(id);
+			ActivityReward jfReward = jfActivityRewardService.get(id);
 			mav.addObject("imageUploadPath", ConfigurePath.IMG_UPLOAD_PATH);
 			mav.addObject("imagePath", ConfigurePath.IMG_FILE_PATH);
 			mav.addObject("activity", jfReward);
@@ -187,7 +187,7 @@ public class ActivityRewardAction extends BaseAction {
 	 */
 	@RequestMapping(value = "/edit")
 	@ResponseBody
-	public Object edit(PointReward jfReward) {
+	public Object edit(ActivityReward jfReward) {
 		try {
 			if (jfReward == null) {
 				throw new RepsException("数据不完整");
@@ -211,7 +211,7 @@ public class ActivityRewardAction extends BaseAction {
 	public Object toDelay(String id) {
 		try {
 			ModelAndView mav = getModelAndView("/jifen/activityreward/delay");
-			PointReward jfReward = jfActivityRewardService.get(id);
+			ActivityReward jfReward = jfActivityRewardService.get(id);
 			mav.addObject("activity", jfReward);
 			mav.addObject("minDate", DateUtil.getCurDateTime("yyyy-MM-dd"));
 			return mav;
@@ -229,7 +229,7 @@ public class ActivityRewardAction extends BaseAction {
 	 */
 	@RequestMapping(value = "/delay")
 	@ResponseBody
-	public Object delay(PointReward jfReward) {
+	public Object delay(ActivityReward jfReward) {
 		try {
 			jfActivityRewardService.delay(jfReward);
 			return ajax(AjaxStatus.OK, "活动延期成功");
@@ -314,7 +314,7 @@ public class ActivityRewardAction extends BaseAction {
 	 */
 	@RequestMapping(value = "/delete")
 	@ResponseBody
-	public Object delete(PointReward jfReward) {
+	public Object delete(ActivityReward jfReward) {
 		try {
 			jfActivityRewardService.update(jfReward);
 			return ajax(AjaxStatus.OK, "删除成功");
@@ -397,7 +397,7 @@ public class ActivityRewardAction extends BaseAction {
 	public Object show(String id) {
 		try {
 			ModelAndView mav = new ModelAndView("/jifen/activityreward/show");
-			PointReward jfReward = jfActivityRewardService.get(id);
+			ActivityReward jfReward = jfActivityRewardService.get(id);
 			mav.addObject("imagePath", ConfigurePath.IMG_FILE_PATH);
 			mav.addObject("activity", jfReward);
 			return mav;
@@ -416,7 +416,7 @@ public class ActivityRewardAction extends BaseAction {
 			ListResult<PointActivityInfo> listResult = activityInfoService.query(pager.getStartRow(), pager.getPageSize(), activityInfo);
 			String rewardId = activityInfo.getRewardId();
 			//查询活动信息
-			PointReward jfReward = jfActivityRewardService.get(rewardId);
+			ActivityReward jfReward = jfActivityRewardService.get(rewardId);
 			//统计参与人数
 			Long participatedCount = activityInfoService.count(rewardId, PARTICIPATED.getId());
 			//统计取消人数
