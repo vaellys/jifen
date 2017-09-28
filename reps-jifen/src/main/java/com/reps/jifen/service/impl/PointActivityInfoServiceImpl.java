@@ -2,11 +2,10 @@ package com.reps.jifen.service.impl;
 
 import static com.reps.jifen.entity.enums.ParticipateStatus.CANCEL_PARTICIPATE;
 import static com.reps.jifen.entity.enums.ParticipateStatus.PARTICIPATED;
+import static com.reps.jifen.util.ActivityUtil.doPosts;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -16,17 +15,12 @@ import org.springframework.stereotype.Service;
 import com.reps.core.exception.RepsException;
 import com.reps.core.orm.ListResult;
 import com.reps.core.util.StringUtil;
-import com.reps.jifen.constant.UrlConstant;
 import com.reps.jifen.dao.ActivityInfoDao;
 import com.reps.jifen.entity.PointActivityInfo;
 import com.reps.jifen.entity.PointReward;
 import com.reps.jifen.entity.enums.AuditStatus;
 import com.reps.jifen.service.IActivityRewardService;
 import com.reps.jifen.service.IPointActivityInfoService;
-import com.reps.jifen.util.ConvertUrlUtil;
-import com.reps.jifen.util.HttpRequstUtil;
-
-import net.sf.json.JSONObject;
 
 /**
  * 活动统计管理
@@ -36,9 +30,6 @@ import net.sf.json.JSONObject;
 @Service
 @Transactional
 public class PointActivityInfoServiceImpl implements IPointActivityInfoService {
-	
-	/**兑换类别 1:物品  2:活动*/
-	private static final Integer ACTIVITY_TYPE = 2;
 	
 	@Autowired
 	ActivityInfoDao dao;
@@ -70,7 +61,7 @@ public class PointActivityInfoServiceImpl implements IPointActivityInfoService {
 				throw new RepsException("该参与活动记录数据异常");
 			}
 			if(PARTICIPATED.getId().shortValue() == isParticipate.shortValue()) {
-				throw new RepsException("参与活动异常:该参与活动记录已经被参与了");
+				throw new RepsException("参与活动异常:您已经参与了该活动");
 			}
 			pointActivityInfo.setIsParticipate(PARTICIPATED.getId());
 			update(pointActivityInfo);
@@ -118,6 +109,10 @@ public class PointActivityInfoServiceImpl implements IPointActivityInfoService {
 		if(null != auditStatus) {
 			pointActivityInfo.setAuditStatus(auditStatus);
 		}
+		String auditOpinion = activityInfo.getAuditOpinion();
+		if(StringUtil.isNotBlank(auditOpinion)) {
+			pointActivityInfo.setAuditOpinion(auditOpinion);
+		}
 		Date createTime = activityInfo.getCreateTime();
 		if(null != createTime) {
 			pointActivityInfo.setCreateTime(createTime);
@@ -126,16 +121,16 @@ public class PointActivityInfoServiceImpl implements IPointActivityInfoService {
 	}
 	
 	@Override
-	public void cancelActivity(PointActivityInfo activityInfo) throws RepsException{
+	public void cancelParticipate(PointActivityInfo activityInfo) throws RepsException{
 		PointActivityInfo pointActivityInfo = this.get(activityInfo);
 		if(null == pointActivityInfo) {
-			throw new RepsException("取消活动异常:该活动记录不存在");
+			throw new RepsException("活动异常:该活动记录不存在");
 		}
 		Short isParticipate = pointActivityInfo.getIsParticipate();
 		Short auditStatus = pointActivityInfo.getAuditStatus();
 		if(null != auditStatus) {
 			if(AuditStatus.PASSED.getId().shortValue() == auditStatus.shortValue()) {
-				throw new RepsException("取消活动异常:该参与活动已经审核通过，不能取消");
+				throw new RepsException("活动异常:该参与活动已经审核通过，不能取消");
 			}
 		}
 		if(null == isParticipate) {
@@ -180,7 +175,7 @@ public class PointActivityInfoServiceImpl implements IPointActivityInfoService {
 	}
 
 	@Override
-	public void audit(PointActivityInfo activityInfo, String serverPath) throws Exception {
+	public void updateAudit(PointActivityInfo activityInfo, String serverPath) throws Exception {
 		if(null == activityInfo) {
 			throw new RepsException("参数异常");
 		}
@@ -207,30 +202,19 @@ public class PointActivityInfoServiceImpl implements IPointActivityInfoService {
 			//请求mongodb 修改个人积分，保存积分日志
 			doPosts(studentId, rewardId, points, serverPath);
 			//修改活动记录表和活动信息表状态
-			cancelActivity(activityInfo);
+			cancelParticipate(pointActivityInfo);
 		}
-		pointActivityInfo.setAuditStatus(auditStatus);
-		pointActivityInfo.setAuditOpinion(activityInfo.getAuditOpinion());
-		this.update(pointActivityInfo);
+		PointActivityInfo info = new PointActivityInfo();
+		info.setAuditStatus(auditStatus);
+		info.setAuditOpinion(activityInfo.getAuditOpinion());
+		info.setStudentId(studentId);
+		info.setRewardId(rewardId);
+		update(info);
 	}
 	
-	private void doPosts(String studentId, String rewardId, Integer points, String serverPath) throws Exception{
-		//构造请求积分收集参数MAP
-		Map<String, Object> paramsMap = new HashMap<>();
-		paramsMap.put("personId", studentId);
-		paramsMap.put("rewardId", rewardId);
-		paramsMap.put("points", points);
-		//设置活动类型
-		paramsMap.put("type", ACTIVITY_TYPE);
-		String params = ConvertUrlUtil.convertByMap(paramsMap);
-		JSONObject jsonObject = HttpRequstUtil.getPostUrlResponse(serverPath + UrlConstant.O_CANCEL_EXCHANGE, params);
-		if (null != jsonObject) {
-			if (200 != jsonObject.getInt("status")) {
-				throw new RepsException(jsonObject.getString("message"));
-			} 
-		}else {
-			throw new RepsException("网络异常");
-		}
+	@Override
+	public List<PointActivityInfo> find(PointActivityInfo activityInfo) throws RepsException {
+		return dao.find(activityInfo);
 	}
 
 }

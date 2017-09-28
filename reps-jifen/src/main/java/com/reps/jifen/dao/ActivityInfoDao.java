@@ -14,6 +14,9 @@ import com.reps.core.orm.IGenericDao;
 import com.reps.core.orm.ListResult;
 import com.reps.core.util.StringUtil;
 import com.reps.jifen.entity.PointActivityInfo;
+import static com.reps.jifen.entity.enums.AuditStatus.*;
+
+import static com.reps.jifen.entity.enums.ParticipateStatus.*;
 import com.reps.school.entity.School;
 import com.reps.school.entity.Student;
 import com.reps.system.entity.Organize;
@@ -76,11 +79,8 @@ public class ActivityInfoDao {
 			if(StringUtil.isNotBlank(rewardId)) {
 				dc.add(Restrictions.eq("rewardId", rewardId));
 			}
-			Short isParticipate = activityInfo.getIsParticipate();
-			if(null != isParticipate) {
-				dc.add(Restrictions.eq("isParticipate", isParticipate));
-			}
 		}
+		dc.add(Restrictions.eq("isParticipate", PARTICIPATED.getId()));
 		return dao.query(dc, start, pagesize, Order.asc("createTime"));
 	}
 	
@@ -107,6 +107,16 @@ public class ActivityInfoDao {
 			 String rewardId = activityInfo.getRewardId();
 			 if(StringUtil.isNotBlank(rewardId)) {
 				 dc.add(Restrictions.eq("rewardId", rewardId));
+			 }
+			 Short isParticipate = activityInfo.getIsParticipate();
+			 if(null != isParticipate) {
+				 dc.add(Restrictions.eq("isParticipate", isParticipate));
+			 }
+			 Short auditStatus = activityInfo.getAuditStatus();
+			 if(null != auditStatus) {
+				 if(REJECTED.getId().shortValue() == auditStatus.shortValue()) {
+					 dc.add(Restrictions.ne("auditStatus", auditStatus));
+				 }
 			 }
 			 String studentId = activityInfo.getStudentId();
 			 if(StringUtil.isNotBlank(studentId)) {

@@ -14,13 +14,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.reps.core.orm.IdEntity;
 
 /**
- * 奖品信息
+ * 活动信息
  * @author qianguobing
  * @date 2017年8月17日 下午5:19:54
  */
 @Entity
-@Table(name = "reps_jf_reward")
-public class PointReward extends IdEntity implements Serializable {
+@Table(name = "reps_jf_activity")
+public class ActivityReward extends IdEntity implements Serializable {
 
 	private static final long serialVersionUID = 5942323150277253519L;
 
@@ -38,10 +38,6 @@ public class PointReward extends IdEntity implements Serializable {
 	@Column(name = "name", nullable = false, length = 30)
 	private String name;
 
-	/** 数量 */
-	@Column(name = "numbers")
-	private Integer numbers;
-	
 	/** 扣除积分 */
 	@Column(name = "points")
 	private Integer points;
@@ -67,16 +63,12 @@ public class PointReward extends IdEntity implements Serializable {
 	private Date beginTime;
 	
 	/** 结束时间 */
-	@Column(name = "end_time")
+	@Column(name = "begin_end")
 	private Date endTime;
 	
 	/** 截止时间 */
 	@Column(name = "finish_time")
 	private Date finishTime;
-	
-	/** 兑换物品数量 */
-	@Column(name = "exchanged_count")
-	private Integer exchangedCount;
 	
 	/** 参与人数 */
 	@Column(name = "participated_count")
@@ -107,29 +99,8 @@ public class PointReward extends IdEntity implements Serializable {
 	@Transient
 	@JsonIgnore
 	private Integer pointEnd;
-	
-	/** 物品图片地址 */
-	@Transient
-	@JsonIgnore
-	private String rewardUrlOne;
-	
-	@Transient
-	@JsonIgnore
-	private String rewardUrlTwo;
-	
-	@Transient
-	@JsonIgnore
-	private String rewardUrlThree;
-	
-	@Transient
-	@JsonIgnore
-	private String rewardUrlFour;
-	
-	@Transient
-	@JsonIgnore
-	private String rewardUrlFive;
-	
-	/** 排序字段 exchanged_count（兑换记录），points（积分值），createTime（新品）*/
+		
+	/** 排序字段 participatedCount（参与人数），points（积分值），createTime（新品）*/
 	@Transient
 	@JsonIgnore
 	private String sortField;
@@ -165,14 +136,6 @@ public class PointReward extends IdEntity implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public Integer getNumbers() {
-		return numbers;
-	}
-
-	public void setNumbers(Integer numbers) {
-		this.numbers = numbers;
 	}
 
 	public Integer getPoints() {
@@ -231,46 +194,6 @@ public class PointReward extends IdEntity implements Serializable {
 		this.finishTimeDisp = finishTimeDisp;
 	}
 
-	public String getRewardUrlOne() {
-		return rewardUrlOne;
-	}
-
-	public void setRewardUrlOne(String rewardUrlOne) {
-		this.rewardUrlOne = rewardUrlOne;
-	}
-
-	public String getRewardUrlTwo() {
-		return rewardUrlTwo;
-	}
-
-	public void setRewardUrlTwo(String rewardUrlTwo) {
-		this.rewardUrlTwo = rewardUrlTwo;
-	}
-
-	public String getRewardUrlThree() {
-		return rewardUrlThree;
-	}
-
-	public void setRewardUrlThree(String rewardUrlThree) {
-		this.rewardUrlThree = rewardUrlThree;
-	}
-
-	public String getRewardUrlFour() {
-		return rewardUrlFour;
-	}
-
-	public void setRewardUrlFour(String rewardUrlFour) {
-		this.rewardUrlFour = rewardUrlFour;
-	}
-
-	public String getRewardUrlFive() {
-		return rewardUrlFive;
-	}
-
-	public void setRewardUrlFive(String rewardUrlFive) {
-		this.rewardUrlFive = rewardUrlFive;
-	}
-
 	public Integer getPointBegin() {
 		return pointBegin;
 	}
@@ -301,14 +224,6 @@ public class PointReward extends IdEntity implements Serializable {
 
 	public void setSortOrder(String sortOrder) {
 		this.sortOrder = sortOrder;
-	}
-
-	public Integer getExchangedCount() {
-		return exchangedCount;
-	}
-
-	public void setExchangedCount(Integer exchangedCount) {
-		this.exchangedCount = exchangedCount;
 	}
 
 	public Integer getParticipatedCount() {

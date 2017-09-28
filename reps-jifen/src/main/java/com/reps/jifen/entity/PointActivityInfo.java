@@ -70,7 +70,7 @@ public class PointActivityInfo extends IdEntity implements Serializable{
 	private Short auditStatus;
 	
 	/** 审核意见 */
-	@Column(name = "audit_opinion")
+	@Column(name = "audit_opinion", length = 100)
 	private String auditOpinion;
 	
 	/** 是否参与 1:已参与 0:取消参与*/

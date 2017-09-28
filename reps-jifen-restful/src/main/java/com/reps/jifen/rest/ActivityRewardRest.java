@@ -26,6 +26,7 @@ import com.reps.core.util.StringUtil;
 import com.reps.jifen.constant.UrlConstant;
 import com.reps.jifen.entity.PointActivityInfo;
 import com.reps.jifen.entity.PointReward;
+import com.reps.jifen.entity.enums.RewardStatus;
 import com.reps.jifen.service.IActivityRewardService;
 import com.reps.jifen.service.IPointActivityInfoService;
 import com.reps.jifen.util.ConvertUrlUtil;
@@ -86,6 +87,10 @@ public class ActivityRewardRest extends RestBaseController {
 			activityInfo.setStudentId(personId);
 			//查询活动信息
 			PointReward activity = activityRewardService.get(rewardId);
+			Short isShown = activity.getIsShown();
+			if(RewardStatus.PUBLISHED.getIndex().shortValue() != isShown.shortValue()) {
+				throw new RepsException("该活动不是发布状态");
+			}
 			//构造请求积分收集参数MAP
 			Map<String, Object> params = new HashMap<>();
 			params.put("personId", personId);
@@ -171,7 +176,7 @@ public class ActivityRewardRest extends RestBaseController {
 			params.put("type", ACTIVITY_TYPE);
 			String convertByMap = ConvertUrlUtil.convertByMap(params);
 			doPost(request, convertByMap, UrlConstant.CANCEL_EXCHANGE);
-			activityInfoService.cancelActivity(activityInfo);
+			activityInfoService.cancelParticipate(activityInfo);
 			return wrap(RestResponseStatus.OK, "活动取消成功");
 		} catch (Exception e) {
 			e.printStackTrace();

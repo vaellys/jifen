@@ -1,7 +1,8 @@
 package com.reps.jifen.action;
 
 import static com.reps.jifen.entity.enums.CategoryType.ACTIVITY;
-import static com.reps.jifen.entity.enums.RewardStatus.UN_PUBLISH;
+import static com.reps.jifen.entity.enums.ParticipateStatus.CANCEL_PARTICIPATE;
+import static com.reps.jifen.entity.enums.ParticipateStatus.PARTICIPATED;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +27,6 @@ import com.reps.core.web.BaseAction;
 import com.reps.jifen.entity.PointActivityInfo;
 import com.reps.jifen.entity.PointReward;
 import com.reps.jifen.entity.RewardCategory;
-import static com.reps.jifen.entity.enums.ParticipateStatus.*;
 import com.reps.jifen.service.IActivityRewardService;
 import com.reps.jifen.service.IPointActivityInfoService;
 import com.reps.jifen.service.IRewardCategoryService;
@@ -269,7 +269,7 @@ public class ActivityRewardAction extends BaseAction {
 	@ResponseBody
 	public Object audit(PointActivityInfo activityInfo) {
 		try {
-			activityInfoService.audit(activityInfo, ConfigurePath.MONGO_PATH);
+			activityInfoService.updateAudit(activityInfo, ConfigurePath.MONGO_PATH);
 			return ajax(AjaxStatus.OK, "操作成功");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -284,6 +284,8 @@ public class ActivityRewardAction extends BaseAction {
 	 * @param auditStatus
 	 * @return Object
 	 */
+	@RequestMapping(value = "/batchaudit")
+	@ResponseBody
 	public Object batchAudit(String ids, Short auditStatus) {
 		try {
 			if(StringUtil.isBlank(ids)) {
@@ -294,7 +296,7 @@ public class ActivityRewardAction extends BaseAction {
 			activityInfo.setAuditStatus(auditStatus);
 			for (String id : idArray) {
 				activityInfo.setId(id);
-				activityInfoService.audit(activityInfo, ConfigurePath.MONGO_PATH);
+				activityInfoService.updateAudit(activityInfo, ConfigurePath.MONGO_PATH);
 			}
 			return ajax(AjaxStatus.OK, "操作成功");
 		} catch (Exception e) {
@@ -358,11 +360,26 @@ public class ActivityRewardAction extends BaseAction {
 	public Object batchPublish(String ids, Short status) {
 		try {
 			jfActivityRewardService.batchPublish(ids, status);
-			if(UN_PUBLISH.getIndex() == status) {
-				return ajax(AjaxStatus.OK, "取消发布成功");
-			}else {
-				return ajax(AjaxStatus.OK, "发布成功");
-			}
+			return ajax(AjaxStatus.OK, "发布成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("操作失败", e);
+			return ajax(AjaxStatus.ERROR, e.getMessage());
+		}
+	}
+	
+	/**
+	 * 修改活动状态
+	 * @param id
+	 * @param status
+	 * @return Object
+	 */
+	@RequestMapping(value = "/updatepublish")
+	@ResponseBody
+	public Object updatepublish(String id, Short status) {
+		try {
+			jfActivityRewardService.updatePublish(id, status, ConfigurePath.MONGO_PATH);
+			return ajax(AjaxStatus.OK, "取消活动成功");
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("操作失败", e);

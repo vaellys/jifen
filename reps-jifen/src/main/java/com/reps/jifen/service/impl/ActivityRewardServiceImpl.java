@@ -2,11 +2,14 @@ package com.reps.jifen.service.impl;
 
 import static com.reps.core.util.DateUtil.format;
 import static com.reps.core.util.DateUtil.getDateFromStr;
+import static com.reps.jifen.entity.enums.AuditStatus.REJECTED;
 import static com.reps.jifen.entity.enums.CategoryType.ACTIVITY;
+import static com.reps.jifen.entity.enums.ParticipateStatus.PARTICIPATED;
 import static com.reps.jifen.entity.enums.RewardStatus.PUBLISHED;
 import static com.reps.jifen.entity.enums.RewardStatus.SOLD_OUT;
 import static com.reps.jifen.entity.enums.RewardStatus.UN_PUBLISH;
 import static com.reps.jifen.entity.enums.ValidRecord.VALID;
+import static com.reps.jifen.util.ActivityUtil.doPosts;
 
 import java.util.Date;
 import java.util.List;
@@ -23,9 +26,11 @@ import com.reps.core.exception.RepsException;
 import com.reps.core.orm.ListResult;
 import com.reps.core.util.StringUtil;
 import com.reps.jifen.dao.PointRewardDao;
+import com.reps.jifen.entity.PointActivityInfo;
 import com.reps.jifen.entity.PointReward;
 import com.reps.jifen.entity.RewardCategory;
 import com.reps.jifen.service.IActivityRewardService;
+import com.reps.jifen.service.IPointActivityInfoService;
 
 /**
  * 积分活动业务实现
@@ -37,9 +42,14 @@ import com.reps.jifen.service.IActivityRewardService;
 public class ActivityRewardServiceImpl implements IActivityRewardService {
 	
 	protected final Logger logger = LoggerFactory.getLogger(ActivityRewardServiceImpl.class);
+	
+	private static final Short CANCEL_ACTIVITY = 0;
 
 	@Autowired
 	PointRewardDao dao;
+	
+	@Autowired
+	IPointActivityInfoService pointActivityInfoService;
 	
 	@Override
 	public void save(PointReward jfReward) throws RepsException{
@@ -132,6 +142,10 @@ public class ActivityRewardServiceImpl implements IActivityRewardService {
 	    if(null != validRecord) {
 	    	pointReward.setValidRecord(validRecord);
 	    }
+	    Short isShown = jfReward.getIsShown();
+	    if(null != isShown) {
+	    	pointReward.setIsShown(isShown);
+	    }
 		dao.update(pointReward);
 	}
 
@@ -195,6 +209,46 @@ public class ActivityRewardServiceImpl implements IActivityRewardService {
 	}
 	
 	@Override
+	public void updatePublish(String id, Short status, String serverPath) throws Exception{
+		if(StringUtil.isBlank(id)) {
+			throw new RepsException("活动ID不能为空");
+		}
+		if(null == status) {
+			throw new RepsException("活动状态不能为空");
+		}
+		PointReward pointReward = get(id);
+		//检查截止时间
+		checkFinishTime(pointReward);
+		//取消活动
+		if(CANCEL_ACTIVITY.shortValue() == status.shortValue()) {
+			PointActivityInfo activityInfo = new PointActivityInfo();
+			activityInfo.setRewardId(id);
+			activityInfo.setAuditStatus(REJECTED.getId());
+			//取消活动时，此人为参与中，审核状态为未审核和审核通过，这些人返还积分
+			activityInfo.setIsParticipate(PARTICIPATED.getId());
+			List<PointActivityInfo> list = pointActivityInfoService.find(activityInfo);
+			for (PointActivityInfo pointActivityInfo : list) {
+				this.cancelActivity(pointActivityInfo, pointReward.getPoints(), serverPath);
+			}
+		}
+		//修改活动状态
+		PointReward jfReward = new PointReward();
+		jfReward.setId(id);
+		jfReward.setIsShown(status);
+		this.update(jfReward );
+	}
+	
+	private void cancelActivity(PointActivityInfo pointActivityInfo, Integer points, String serverPath) throws Exception {
+		String studentId = pointActivityInfo.getStudentId();
+		String rewardId = pointActivityInfo.getRewardId();
+		if(StringUtil.isBlank(studentId) || StringUtil.isBlank(rewardId) || null == points) {
+			throw new RepsException("活动数据异常");
+		}
+		//请求mongodb 修改个人积分，保存积分日志
+		doPosts(studentId, rewardId, points, serverPath);
+	}
+	
+	@Override
 	public void batchPublish(String ids, Short status) throws RepsException{
 		if (StringUtil.isBlank(ids)) {
 			throw new RepsException("发布异常:活动ID不能为空");
@@ -205,15 +259,19 @@ public class ActivityRewardServiceImpl implements IActivityRewardService {
 		String[] idArray = ids.split(",");
 		for (String id : idArray) {
 			PointReward pointReward = this.get(id);
-			Date finishTime = pointReward.getFinishTime();
-			if(null == finishTime) {
-				throw new RepsException("发布异常:截止时间为空");
-			}
-			if(finishTime.getTime() < getDateFromStr(format(new Date(), "yyyy-MM-dd"), "yyyy-MM-dd").getTime()) {
-				throw new RepsException("发布异常:活动截止时间小于当前时间,请修改截止时间后再发布！");
-			}
+			checkFinishTime(pointReward);
 		}
 		dao.batchUpdate(ids, status);
+	}
+
+	private void checkFinishTime(PointReward pointReward) throws RepsException {
+		Date finishTime = pointReward.getFinishTime();
+		if(null == finishTime) {
+			throw new RepsException("截止时间为空");
+		}
+		if(finishTime.getTime() < getDateFromStr(format(new Date(), "yyyy-MM-dd"), "yyyy-MM-dd").getTime()) {
+			throw new RepsException("活动截止时间小于当前时间,请修改截止时间后再发布！");
+		}
 	}
 	
 	@Scheduled(cron = "0 0 2 * * ?")

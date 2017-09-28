@@ -93,4 +93,13 @@ public interface IActivityRewardService {
 	 */
 	public void activityExpired();
 
+	/**
+	 * 取消活动
+	 * @param id
+	 * @param status
+	 * @param serverPath
+	 * @throws Exception
+	 */
+	public void updatePublish(String id, Short status, String serverPath) throws Exception;
+
 }
