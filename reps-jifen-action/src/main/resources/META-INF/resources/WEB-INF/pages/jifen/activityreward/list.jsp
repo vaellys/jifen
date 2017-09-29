@@ -18,7 +18,7 @@
 				<reps:select  dataSource="${activityTypeMap }" name="categoryId">${jfReward.categoryId }</reps:select>
 			</reps:formfield>
 			<reps:formfield label="活动状态" labelStyle="width:23%;" textStyle="width:30%;">
-				<reps:select name="isShown" jsonData="{'':'全部','0':'未发布','1':'进行中','2':'已结束'}">${jfReward.isShown }</reps:select>
+				<reps:select name="isShown" jsonData="{'':'全部','0':'未发布','1':'进行中','2':'已结束','3':'已取消'}">${jfReward.isShown }</reps:select>
 			</reps:formfield>
 			<%-- <reps:formfield label="兑换截至时间"><reps:datepicker name="finishTimeDisp" format="yyyy-MM-dd" /></reps:formfield> --%>
 		</reps:formcontent>
@@ -39,19 +39,19 @@
 				<reps:gridfield title="活动分类" width="15" align="center">${activity.jfRewardCategory.name}</reps:gridfield>
 				<reps:gridfield title="活动名称" width="25" align="center">${activity.name }</reps:gridfield>
 				<reps:gridfield title="所需积分" width="15" align="center">${activity.points}</reps:gridfield>
-				<reps:gridfield title="兑换截至时间" width="25" align="center">
+				<reps:gridfield title="报名截至时间" width="25" align="center">
 					<fmt:formatDate value="${activity.finishTime }" pattern="yyyy-MM-dd"/>
 				</reps:gridfield>
-				<reps:gridfield title="上线时间" width="25" align="center">
-					<fmt:formatDate value="${activity.showTime }" pattern="yyyy-MM-dd"/>
+				<reps:gridfield title="活动时间" width="28" align="center">
+					<fmt:formatDate value="${activity.beginTime }" pattern="yyyy-MM-dd"/>~<fmt:formatDate value="${activity.endTime }" pattern="yyyy-MM-dd"/>
 				</reps:gridfield>
 				<reps:gridfield title="活动详情" width="30" >${activity.description}</reps:gridfield>
-				<reps:gridfield title="活动状态" width="15" align="center"><c:if test="${activity.isShown == '1'}">进行中</c:if><c:if test="${activity.isShown == '0' }">未发布</c:if><c:if test="${activity.isShown == '2' }">已结束</c:if></reps:gridfield>
+				<reps:gridfield title="活动状态" width="15" align="center"><c:if test="${activity.isShown == '1'}">进行中</c:if><c:if test="${activity.isShown == '0' }">未发布</c:if><c:if test="${activity.isShown == '2' }">已结束</c:if><c:if test="${activity.isShown == '3' }">已取消</c:if></reps:gridfield>
 				<%-- <reps:gridfield title="已参与/已兑换" width="25" align="center"></reps:gridfield> --%>
 				<reps:gridfield title="操作" width="50">
 					<reps:button cssClass="detail-table" action="show.mvc?id=${activity.id }" value="详细"></reps:button>
 					<c:if test="${activity.isShown == '1'}">
-						<reps:ajax cssClass="publish-table" value="取消发布" confirm="您确定要取消发布吗？" redirect="list.mvc" url="batchpublish.mvc?ids=${activity.id }&status=0"></reps:ajax>
+						<reps:ajax cssClass="publish-table" value="取消活动" confirm="您确定要取消活动吗？" redirect="list.mvc" url="updatepublish.mvc?id=${activity.id }&status=3"></reps:ajax>
 					</c:if>
 					<c:if test="${activity.isShown == '2'}">
 						<reps:dialog cssClass="publish-table" id="add" iframe="true" width="350"
@@ -61,13 +61,17 @@
 					<c:if test="${activity.isShown == '0'}">
 						<reps:ajax cssClass="publish-table" value="发布" confirm="您确定要发布吗？" redirect="list.mvc" url="batchpublish.mvc?ids=${activity.id }&status=1"></reps:ajax>
 					</c:if>
-					<c:if test="${activity.isShown != '1' }">
+					<c:if test="${activity.isShown == '0' || activity.isShown == '2'}">
 						<reps:button cssClass="modify-table" messageCode="manage.action.update" action="toedit.mvc?id=${activity.id}" ></reps:button>
+					</c:if>
+					<c:if test="${activity.isShown == '0' || activity.isShown == '2' || activity.isShown == '3'}">
 						<reps:ajax cssClass="delete-table" messageCode="manage.action.delete" confirm="您确定要删除所选行吗？"
 							redirect="list.mvc" url="delete.mvc?id=${activity.id}&validRecord=9">
 						</reps:ajax>
 					</c:if>
-					<reps:button cssClass="look-summary-table"  value="统计管理" action="statistics.mvc?rewardId=${activity.id}" ></reps:button>
+					<c:if test="${activity.isShown == '1' || activity.isShown == '2' || activity.isShown == '3'}">
+						<reps:button cssClass="look-summary-table"  value="统计" action="statistics.mvc?rewardId=${activity.id}" ></reps:button>
+					</c:if>
 				</reps:gridfield>
 			</reps:gridrow>
 		</reps:grid>

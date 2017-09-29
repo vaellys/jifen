@@ -49,7 +49,7 @@
 				<span id="rewardPicTwo">
 					<c:choose>
 					   <c:when test="${not empty reward.rewardUrlTwo }">
-					   ${reward.rewardUrlTwo}
+					   ${reward.rewardUrlTwo} <a href="#" class="delete-a" onclick="deletePicture($('#rewardPicTwo'),$('#rewardUrlTwo'))"><span>删除</span></a>
 					   </c:when>
 					   <c:otherwise>
 					   <font color="red">只能上传(png、jpg)格式</font></span>
@@ -64,7 +64,7 @@
 				<span id="rewardPicThree">
 					<c:choose>
 					   <c:when test="${not empty reward.rewardUrlThree }">
-					   ${reward.rewardUrlThree}
+					   ${reward.rewardUrlThree} <a href="#" class="delete-a" onclick="deletePicture($('#rewardPicThree'),$('#rewardUrlThree'))"><span>删除</span></a>
 					   </c:when>
 					   <c:otherwise>
 					   <font color="red">只能上传(png、jpg)格式</font></span>
@@ -79,7 +79,7 @@
 				<span id="rewardPicFour">
 					<c:choose>
 					   <c:when test="${not empty reward.rewardUrlFour }">
-					   ${reward.rewardUrlFour}
+					   ${reward.rewardUrlFour}<a href="#" class="delete-a" onclick="deletePicture($('#rewardPicFour'),$('#rewardUrlFour'))"><span>删除</span></a>
 					   </c:when>
 					   <c:otherwise>
 					   <font color="red">只能上传(png、jpg)格式</font></span>
@@ -94,7 +94,7 @@
 				<span id="rewardPicFive">
 					<c:choose>
 					   <c:when test="${not empty reward.rewardUrlFive }">
-					    ${reward.rewardUrlFive}
+					    ${reward.rewardUrlFive}<a href="#" class="delete-a" onclick="deletePicture($('#rewardPicFive'),$('#rewardUrlFive'))"><span>删除</span></a>
 					   </c:when>
 					   <c:otherwise>
 					   <font color="red">只能上传(png、jpg)格式</font></span>
@@ -137,28 +137,32 @@
 		path = path.replaceAll("\\\\","/");
 		var picture = path.replace("${imageUploadPath}","");
 		$("#rewardUrlTwo").val(picture);
-		$("#rewardPicTwo").html(picture);
+		var delHtml = '<a href="#" class="delete-a" onclick="deletePicture($(\'#rewardPicTwo\'),$(\'#rewardUrlTwo\'));"><span>删除</span></a>';
+		$("#rewardPicTwo").html(picture + delHtml);
 	};
 	
 	var getPathNameThree = function(filename, fileType, fileSize, path) {
 		path = path.replaceAll("\\\\","/");
 		var picture = path.replace("${imageUploadPath}","");
 		$("#rewardUrlThree").val(picture);
-		$("#rewardPicThree").html(picture);
+		var delHtml = '<a href="#" class="delete-a" onclick="deletePicture($(\'#rewardPicThree\'),$(\'#rewardUrlThree\'));"><span>删除</span></a>';
+		$("#rewardPicThree").html(picture + delHtml);
 	};
 	
 	var getPathNameFour = function(filename, fileType, fileSize, path) {
 		path = path.replaceAll("\\\\","/");
 		var picture = path.replace("${imageUploadPath}","");
 		$("#rewardUrlFour").val(picture);
-		$("#rewardPicFour").html(picture);
+		var delHtml = '<a href="#" class="delete-a" onclick="deletePicture($(\'#rewardPicFour\'),$(\'#rewardUrlFour\'));"><span>删除</span></a>';
+		$("#rewardPicFour").html(picture + delHtml);
 	};
 	
 	var getPathNameFive = function(filename, fileType, fileSize, path) {
 		path = path.replaceAll("\\\\","/");
 		var picture = path.replace("${imageUploadPath}","");
 		$("#rewardUrlFive").val(picture);
-		$("#rewardPicFive").html(picture);
+		var delHtml = '<a href="#" class="delete-a" onclick="deletePicture($(\'#rewardPicFive\'),$(\'#rewardUrlFive\'));"><span>删除</span></a>';
+		$("#rewardPicFive").html(picture + delHtml);
 	};
 	
 	var checkIndexPicture = function(){
@@ -170,6 +174,11 @@
   			return true;
   		}
   	}
+	
+	function deletePicture($objText, $objInput){
+		$objText.empty();
+		$objInput.val("");
+	}
 	
 </script>
 </html>

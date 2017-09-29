@@ -23,6 +23,7 @@ import com.reps.jifen.entity.enums.Sources;
 import com.reps.jifen.service.IPointsAggregateService;
 import com.reps.jifen.service.IPointsCollectService;
 import com.reps.jifen.service.IPointsExchangeService;
+import static com.reps.jifen.util.PointsExchangeUtil.*;
 
 @RestController
 @RequestMapping(value = "/oapi/pointsexchange")
@@ -48,6 +49,7 @@ public class PointsExchangeORest extends RestBaseController{
 	public RestResponse<List<PointsExchange>> list(Integer count) {
 		try {
 			List<PointsExchange> result = jfPointsExchangeService.findByCount(count);
+			transformList(result);
 			return wrap(RestResponseStatus.OK, "查询成功", result);
 		} catch (Exception e) {
 			logger.error("查询异常", e);
@@ -65,6 +67,7 @@ public class PointsExchangeORest extends RestBaseController{
 	public RestResponse<ListResult<PointsExchange>> list(Integer pageIndex, Integer pageSize) {
 		try {
 			ListResult<PointsExchange> result = jfPointsExchangeService.findAll(pageIndex, pageSize);
+			transformList(result.getList());
 			return wrap(RestResponseStatus.OK, "查询成功", result);
 		} catch (Exception e) {
 			logger.error("查询异常", e);

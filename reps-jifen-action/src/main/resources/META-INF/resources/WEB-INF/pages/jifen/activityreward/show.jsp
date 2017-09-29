@@ -20,10 +20,10 @@
 					labelStyle="width:20%;"><fmt:formatDate value="${activity.finishTime }" pattern="yyyy-MM-dd"/></reps:detailfield>
 				<reps:detailfield label="所需积分" fullRow="true"
 					labelStyle="width:20%;">${activity.points }</reps:detailfield>
-				<reps:detailfield label="上线时间" fullRow="true"
-					labelStyle="width:20%;"><fmt:formatDate value="${activity.showTime }" pattern="yyyy-MM-dd"/></reps:detailfield>
+				<reps:detailfield label="活动时间" fullRow="true"
+					labelStyle="width:20%;"><fmt:formatDate value="${activity.beginTime }" pattern="yyyy-MM-dd"/>~<fmt:formatDate value="${activity.endTime }" pattern="yyyy-MM-dd"/></reps:detailfield>
 				<reps:detailfield label="活动状态" fullRow="true"
-					labelStyle="width:20%;"><c:if test="${activity.isShown == '1'}">进行中</c:if><c:if test="${activity.isShown == '0' }">未发布</c:if><c:if test="${activity.isShown == '2' }">已结束</c:if></reps:detailfield>
+					labelStyle="width:20%;"><c:if test="${activity.isShown == '1'}">进行中</c:if><c:if test="${activity.isShown == '0' }">未发布</c:if><c:if test="${activity.isShown == '2' }">已结束</c:if><c:if test="${activity.isShown == '3' }">已取消</c:if></reps:detailfield>
 				<reps:detailfield label="活动详情" fullRow="true"
 					labelStyle="width:20%;">${activity.description }</reps:detailfield>
 				<reps:detailfield label="图片" fullRow="true"

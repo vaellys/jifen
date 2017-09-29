@@ -202,7 +202,7 @@ public class PointActivityInfoServiceImpl implements IPointActivityInfoService {
 			//请求mongodb 修改个人积分，保存积分日志
 			doPosts(studentId, rewardId, points, serverPath);
 			//修改活动记录表和活动信息表状态
-			cancelParticipate(buildParam(activityInfo, auditStatus, studentId, rewardId));
+			//cancelParticipate(buildParam(activityInfo, auditStatus, studentId, rewardId));
 		}
 		update(buildParam(activityInfo, auditStatus, studentId, rewardId));
 	}

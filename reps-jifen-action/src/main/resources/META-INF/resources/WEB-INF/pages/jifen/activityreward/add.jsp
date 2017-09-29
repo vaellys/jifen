@@ -21,7 +21,7 @@
 	           <reps:dialog cssClass="btnLook" scrolling="true" width="300" id="chooseParentCode" iframe="true" url="choose.mvc" title="选择活动分类" value="选择活动分类" style="margin-left:-27px;" />
            </reps:formfield>
 			
-			<reps:formfield label="兑换截至时间" labelStyle="width:20%;" textStyle="width:20%;">
+			<reps:formfield label="报名截至时间" labelStyle="width:20%;" textStyle="width:20%;">
 				<reps:datepicker id="finishTime" name="finishTimeDisp" format="yyyy-MM-dd" required="true" min="${minDate }"></reps:datepicker>
 		    </reps:formfield>
 		    
@@ -29,8 +29,12 @@
 				<reps:input name="points" dataType="integernum" required="true"></reps:input>
 			</reps:formfield>
 			
-			<reps:formfield label="上线时间" labelStyle="width:20%;" textStyle="width:20%;" fullRow="true">
-				<reps:datepicker id="showTime" name="showTimeDisp" format="yyyy-MM-dd" required="true" min="${minDate }"></reps:datepicker>
+		   <reps:formfield label="活动开始时间" labelStyle="width:20%;" textStyle="width:20%;">
+				<reps:datepicker id="beginTime" name="beginTimeDisp" format="yyyy-MM-dd" required="true" min="${minDate }"></reps:datepicker>
+		    </reps:formfield>
+		    
+		    <reps:formfield label="活动结束时间" labelStyle="width:15%;" textStyle="width:30%;" fullRow="true">
+				<reps:datepicker id="endTime" name="endTimeDisp" format="yyyy-MM-dd" required="true" min="${minDate }"></reps:datepicker>
 		    </reps:formfield>
 		    
 			<reps:formfield label="活动详情" fullRow="true">
@@ -71,10 +75,15 @@
 	};
 	
 	function checkFieldParams(){
-		var showTime = $("#showTime").val();
+		var beginTime = $("#beginTime").val();
+		var endTime = $("#endTime").val();
 		var finishTime = $("#finishTime").val();
-		if(showTime > finishTime){
-			messager.info("上线日期应该小于等于截止日期");
+		if(beginTime <= finishTime){
+			messager.info("报名截止日期大于等于活动开始日期");
+			return false;
+		}
+		if(beginTime > endTime){
+			messager.info("活动开始日期大于活动结束日期");
 			return false;
 		}
 		var picture = $("#pic").val();
