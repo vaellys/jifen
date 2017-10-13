@@ -35,6 +35,7 @@
 		<reps:grid id="activityList" items="${list}" form="queryForm" var="activity" pagination="${pager}" flagSeq="true">
 			<reps:gridrow>
 				<input type="hidden" name="activityStatus" value="${activity.isShown }">
+				<input type="hidden" name="finishTime" value="${activity.finishTime }"/>
 				<%-- <reps:gridcheckboxfield checkboxName="id" align="center" title="" width="5">${activity.id}</reps:gridcheckboxfield> --%>
 				<reps:gridfield title="活动分类" width="15" align="center">${activity.jfRewardCategory.name}</reps:gridfield>
 				<reps:gridfield title="活动名称" width="25" align="center">${activity.name }</reps:gridfield>
@@ -42,16 +43,17 @@
 				<reps:gridfield title="报名截至时间" width="25" align="center">
 					<fmt:formatDate value="${activity.finishTime }" pattern="yyyy-MM-dd"/>
 				</reps:gridfield>
-				<reps:gridfield title="活动时间" width="28" align="center">
-					<fmt:formatDate value="${activity.beginTime }" pattern="yyyy-MM-dd"/>~<fmt:formatDate value="${activity.endTime }" pattern="yyyy-MM-dd"/>
+				<reps:gridfield title="活动起止时间" width="28" align="center">
+					<fmt:formatDate value="${activity.beginTime }" pattern="yyyy-MM-dd"/>——<fmt:formatDate value="${activity.endTime }" pattern="yyyy-MM-dd"/>
 				</reps:gridfield>
-				<reps:gridfield title="活动详情" width="30" >${activity.description}</reps:gridfield>
+				<%-- <reps:gridfield title="活动详情" width="30" >${activity.description}</reps:gridfield> --%>
+				<reps:gridfield title="参与人数" width="15" align="center">${empty activity.participatedCount ? 0 : activity.participatedCount}</reps:gridfield>
 				<reps:gridfield title="活动状态" width="15" align="center"><c:if test="${activity.isShown == '1'}">进行中</c:if><c:if test="${activity.isShown == '0' }">未发布</c:if><c:if test="${activity.isShown == '2' }">已结束</c:if><c:if test="${activity.isShown == '3' }">已取消</c:if></reps:gridfield>
 				<%-- <reps:gridfield title="已参与/已兑换" width="25" align="center"></reps:gridfield> --%>
 				<reps:gridfield title="操作" width="50">
 					<reps:button cssClass="detail-table" action="show.mvc?id=${activity.id }" value="详细"></reps:button>
 					<c:if test="${activity.isShown == '1'}">
-						<reps:ajax cssClass="publish-table" value="取消活动" confirm="您确定要取消活动吗？" redirect="list.mvc" url="updatepublish.mvc?id=${activity.id }&status=3"></reps:ajax>
+						<reps:ajax cssClass="publish-table" value="取消活动" confirm="您确定要取消活动吗？" callBack="my" url="updatepublish.mvc?id=${activity.id }&status=3"></reps:ajax>
 					</c:if>
 					<c:if test="${activity.isShown == '2'}">
 						<reps:dialog cssClass="publish-table" id="add" iframe="true" width="350"
@@ -59,7 +61,7 @@
 					<%-- 	<reps:ajax cssClass="publish-table" value="延期" confirm="您确定要重新发布吗？" redirect="list.mvc" url="batchpublish.mvc?ids=${activity.id }&status=1"></reps:ajax> --%>
 					</c:if>
 					<c:if test="${activity.isShown == '0'}">
-						<reps:ajax cssClass="publish-table" value="发布" confirm="您确定要发布吗？" redirect="list.mvc" url="batchpublish.mvc?ids=${activity.id }&status=1"></reps:ajax>
+						<reps:ajax cssClass="publish-table" value="发布" confirm="您确定要发布吗？"  callBack="my" beforeCall="checkFinishTime(this)" url="batchpublish.mvc?ids=${activity.id }&status=1"></reps:ajax>
 					</c:if>
 					<c:if test="${activity.isShown == '0' || activity.isShown == '2'}">
 						<reps:button cssClass="modify-table" messageCode="manage.action.update" action="toedit.mvc?id=${activity.id}" ></reps:button>
@@ -79,8 +81,10 @@
 </reps:container>
 <script type="text/javascript">
 	var my = function(data){
-		window.location.href= "list.mvc";
-	};
+		messager.message(data, function(){
+			window.location.href= "list.mvc";
+		});
+	}
 		
 	function buildIdParams(msg){
 		if ($("input[type=checkbox][name=id]:checked").length == 0) {
@@ -117,6 +121,17 @@
 		}
 	};
 	
+	var checkFinishTime = function(obj){
+		var currentTime = new Date();
+		var finishTime = $(obj).parents("tr").find("input[name='finishTime']").val();
+		finishTime = new Date(finishTime);
+		if(finishTime.getTime() >= currentTime.getTime()){
+			messager.info("报名截止时间大于或等于当前时间,请修改截止时间后再发布！");
+			return false;
+		}else{
+			return true;
+		}
+	}
 	
 </script>
 </body>

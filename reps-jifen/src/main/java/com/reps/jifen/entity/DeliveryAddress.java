@@ -28,10 +28,6 @@ public class DeliveryAddress extends IdEntity {
 	@Column(name = "consignee_name")
 	private String consigneeName;
 	
-	/**地址*/
-	@Column(name = "address")
-	private String address;
-	
 	/**详细地址*/
 	@Column(name = "detail_address")
 	private String detailAddress;
@@ -60,14 +56,6 @@ public class DeliveryAddress extends IdEntity {
 
 	public void setConsigneeName(String consigneeName) {
 		this.consigneeName = consigneeName;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
 	}
 
 	public String getDetailAddress() {

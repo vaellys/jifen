@@ -1,5 +1,7 @@
 package com.reps.jifen.service;
 
+import java.util.List;
+
 import com.reps.core.exception.RepsException;
 import com.reps.core.orm.ListResult;
 import com.reps.jifen.entity.TeacherPointsAssign;
@@ -18,4 +20,5 @@ public interface ITeacherPointsAssignService {
 	 */
 	ListResult<TeacherPointsAssign> findByTeacherId(String teacherId, Integer pageIndex, Integer pageSize) throws RepsException;
 	
+	List<TeacherPointsAssign> findByStudentIdAndMark(String studentId, int mark); 
 }

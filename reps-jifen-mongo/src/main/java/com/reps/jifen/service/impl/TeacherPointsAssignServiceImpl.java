@@ -1,5 +1,7 @@
 package com.reps.jifen.service.impl;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +52,12 @@ public class TeacherPointsAssignServiceImpl implements
 	@Override
 	public void save(TeacherPointsAssign data) {
 		repository.save(data);
+	}
+
+	@Override
+	public List<TeacherPointsAssign> findByStudentIdAndMark(String studentId,
+			int mark) {
+		return repository.findByStudentIdAndMark(studentId, mark);
 	}
 
 }

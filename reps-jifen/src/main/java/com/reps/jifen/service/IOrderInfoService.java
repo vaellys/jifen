@@ -15,8 +15,6 @@ public interface IOrderInfoService {
 	
 	OrderInfo get(String id, boolean eager);
 	
-	void delete(OrderInfo data);
-	
 	List<OrderInfo> find(OrderInfo query);
 	
 	ListResult<OrderInfo> query(int start, int pageSize, OrderInfo query);

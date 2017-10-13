@@ -74,7 +74,6 @@ public class ActivityRewardORest extends RestBaseController {
 			}
 			ActivityReward jfReward = new ActivityReward();
 			jfReward.setIsShown(PUBLISHED.getIndex());
-			//setRewardType(jfReward, ACTIVITY.getIndex());
 			ListResult<ActivityReward> resultList = jfActivityRewardService.query(0, count, jfReward);
 			if (null == resultList) {
 				throw new RepsException("查询活动数量异常");

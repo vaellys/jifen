@@ -2,6 +2,7 @@ package com.reps.jifen.service;
 
 import java.util.List;
 
+import com.reps.core.exception.RepsException;
 import com.reps.core.orm.ListResult;
 import com.reps.jifen.entity.ParentPjfzsz;
 
@@ -27,15 +28,17 @@ public interface IParentPjfzszService {
 	/**
 	 * 修改家庭行为评分项
 	 * @param jfParentPjfzsz
+	 * @throws RepsException 
 	 */
-	public void update(ParentPjfzsz jfParentPjfzsz);
+	public void update(ParentPjfzsz jfParentPjfzsz) throws RepsException;
 	
 	/**
 	 * 根据id查询家庭行为
 	 * @param id
 	 * @return JfParentPjfzsz
+	 * @throws RepsException 
 	 */
-	public ParentPjfzsz get(String id);
+	public ParentPjfzsz get(String id) throws RepsException;
 	
 	/**
 	 * 分页查询

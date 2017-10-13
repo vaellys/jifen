@@ -1,6 +1,10 @@
 package com.reps.jifen.rest;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -70,6 +74,7 @@ public class TeacherPointsAssignRest extends RestBaseController{
 					|| StringUtils.isBlank(info.getSchoolId())
 					|| StringUtils.isBlank(info.getRuleName())
 					|| StringUtils.isBlank(info.getRuleId())
+					|| StringUtils.isBlank(info.getUrl())
 					|| info.getMark() == null || info.getPoints() == null) {
 	
 					result.setMessage("请求参数错误");
@@ -86,6 +91,8 @@ public class TeacherPointsAssignRest extends RestBaseController{
 				aggregate.setTotalPoints(0);
 				aggregate.setTotalPointsUsable(0);
 				aggregate.setLevel((short) 0);
+				aggregate.setPersonName(info.getStudentName());
+				aggregate.setSchoolName(info.getSchoolName());
 				aggreateService.save(aggregate);
 			}
 			//添加学生个人记录
@@ -128,5 +135,57 @@ public class TeacherPointsAssignRest extends RestBaseController{
 			return wrap(RestResponseStatus.INTERNAL_SERVER_ERROR, "添加教师积分分配记录异常：" + e.getMessage());
 		}
 		return wrap(RestResponseStatus.OK, "保存记录成功");
+	}
+	
+	@RequestMapping(value = "/gethonour")
+	public RestResponse<Map<String, Object>> getHonour(String personId) {
+		try {
+			Map<String, Object> map = new HashMap<>();
+			if (StringUtils.isBlank(personId)) {
+				personId = getCurrentLoginInfo().getPersonId();
+			}
+			List<TeacherPointsAssign> list = tAssignService.findByStudentIdAndMark(personId, 1);
+			Map<String, Integer> countMap = countMap(list);
+			List<Map<String, Object>> listMap = converListMap(countMap, list);
+			map.put("data", listMap);
+			return wrap(RestResponseStatus.OK, "获取勋章列表成功", map);
+		} catch (Exception e) {
+			logger.error("获取勋章列表异常", e);
+			return wrap(RestResponseStatus.INTERNAL_SERVER_ERROR, "获取勋章列表异常:" + e.getMessage());
+		}
+	}
+	
+	private List<Map<String, Object>> converListMap(Map<String, Integer> countMap, List<TeacherPointsAssign> list) {
+		List<Map<String, Object>> listMap = new ArrayList<>();
+		Map<String, String> recordMap = new HashMap<>();
+		if (countMap != null && !countMap.isEmpty()) {
+			for (TeacherPointsAssign data : list) {
+				if (StringUtils.isNotBlank(recordMap.get(data.getRuleId()))) {
+					continue;
+				}
+				recordMap.put(data.getRuleId(), data.getRuleName());
+				Map<String, Object> map = new HashMap<>();
+				map.put("ruleId", data.getRuleId());
+				map.put("ruleName", data.getRuleName());
+				map.put("url", getFileFullUrl(data.getUrl(), null));
+				map.put("count", countMap.get(data.getRuleId()) == null ? 0 : countMap.get(data.getRuleId()));
+				listMap.add(map);
+			}
+		}
+		return listMap;
+	}
+	
+	private Map<String, Integer> countMap(List<TeacherPointsAssign> list) {
+		Map<String, Integer> map = new HashMap<>();
+		if (list != null && !list.isEmpty()) {
+			for (TeacherPointsAssign data : list) {
+				if (map.get(data.getRuleId()) == null) {
+					map.put(data.getRuleId(), 1);
+				} else {
+					map.put(data.getRuleId(), map.get(data.getRuleId()) + 1);
+				}
+			}
+		}
+		return map;
 	}
 }

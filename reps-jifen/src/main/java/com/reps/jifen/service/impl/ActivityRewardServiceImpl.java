@@ -2,7 +2,7 @@ package com.reps.jifen.service.impl;
 
 import static com.reps.core.util.DateUtil.format;
 import static com.reps.core.util.DateUtil.getDateFromStr;
-import static com.reps.jifen.entity.enums.AuditStatus.REJECTED;
+import static com.reps.jifen.entity.enums.AuditStatus.PASSED;
 import static com.reps.jifen.entity.enums.CategoryType.ACTIVITY;
 import static com.reps.jifen.entity.enums.ParticipateStatus.PARTICIPATED;
 import static com.reps.jifen.entity.enums.ActivityStatus.*;
@@ -41,8 +41,6 @@ public class ActivityRewardServiceImpl implements IActivityRewardService {
 	
 	protected final Logger logger = LoggerFactory.getLogger(ActivityRewardServiceImpl.class);
 	
-	private static final Short CANCEL_ACTIVITY = 0;
-
 	@Autowired
 	ActivityRewardDao dao;
 	
@@ -203,7 +201,7 @@ public class ActivityRewardServiceImpl implements IActivityRewardService {
 	}
 	
 	@Override
-	public void updatePublish(String id, Short status, String serverPath) throws Exception{
+	public void updatePublish(String id, Short status, String serverPath) throws RepsException{
 		if(StringUtil.isBlank(id)) {
 			throw new RepsException("活动ID不能为空");
 		}
@@ -211,19 +209,20 @@ public class ActivityRewardServiceImpl implements IActivityRewardService {
 			throw new RepsException("活动状态不能为空");
 		}
 		ActivityReward pointReward = get(id);
-		//检查截止时间
-		checkFinishTime(pointReward);
 		//取消活动
-		if(CANCEL_ACTIVITY.shortValue() == status.shortValue()) {
+		if(CANCELLED.getIndex().shortValue() == status.shortValue()) {
 			PointActivityInfo activityInfo = new PointActivityInfo();
 			activityInfo.setRewardId(id);
-			activityInfo.setAuditStatus(REJECTED.getId());
+			activityInfo.setAuditStatus(PASSED.getId());
 			//取消活动时，此人为参与中，审核状态为未审核和审核通过，这些人返还积分
 			activityInfo.setIsParticipate(PARTICIPATED.getId());
 			List<PointActivityInfo> list = pointActivityInfoService.findNotAudit(activityInfo);
 			for (PointActivityInfo pointActivityInfo : list) {
 				this.cancelActivity(pointActivityInfo, pointReward.getPoints(), serverPath);
 			}
+		}else {
+			//检查截止时间
+			checkFinishTime(pointReward);
 		}
 		//修改活动状态
 		ActivityReward jfReward = new ActivityReward();
@@ -232,7 +231,7 @@ public class ActivityRewardServiceImpl implements IActivityRewardService {
 		this.update(jfReward );
 	}
 	
-	private void cancelActivity(PointActivityInfo pointActivityInfo, Integer points, String serverPath) throws Exception {
+	private void cancelActivity(PointActivityInfo pointActivityInfo, Integer points, String serverPath) throws RepsException {
 		String studentId = pointActivityInfo.getStudentId();
 		String rewardId = pointActivityInfo.getRewardId();
 		if(StringUtil.isBlank(studentId) || StringUtil.isBlank(rewardId) || null == points) {
@@ -261,10 +260,10 @@ public class ActivityRewardServiceImpl implements IActivityRewardService {
 	private void checkFinishTime(ActivityReward pointReward) throws RepsException {
 		Date finishTime = pointReward.getFinishTime();
 		if(null == finishTime) {
-			throw new RepsException("截止时间为空");
+			throw new RepsException("报名截止时间为空");
 		}
 		if(finishTime.getTime() < getDateFromStr(format(new Date(), "yyyy-MM-dd"), "yyyy-MM-dd").getTime()) {
-			throw new RepsException("活动截止时间小于当前时间,请修改截止时间后再发布！");
+			throw new RepsException("报名截止时间小于当前时间,请修改截止时间后再发布！");
 		}
 	}
 	
@@ -287,7 +286,7 @@ public class ActivityRewardServiceImpl implements IActivityRewardService {
 					try {
 						dao.batchUpdate(activity.getId(), COMPLETED.getIndex());
 					} catch (Exception e) {
-						logger.error("活动过期状态更新失败,该活动信息为:活动ID " + jfReward.getId() + ", 活动状态  " + jfReward.getIsShown() + ", 活动截止时间 " + jfReward.getFinishTime());
+						logger.error("活动过期状态更新失败,该活动信息为:活动ID " + jfReward.getId() + ", 活动状态  " + jfReward.getIsShown() + ", 报名截止时间 " + jfReward.getFinishTime());
 					}
 				}
 			}

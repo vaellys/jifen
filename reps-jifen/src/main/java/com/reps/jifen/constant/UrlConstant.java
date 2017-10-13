@@ -1,7 +1,7 @@
 package com.reps.jifen.constant;
 
 /**
- * url常量(Get请求加'?')
+ * url常量()
  * @author Lanxumit
  *
  */
@@ -20,6 +20,16 @@ public class UrlConstant {
 	public static final String O_CANCEL_EXCHANGE = "/oapi/pointsexchange/cancel";
 	
 	public static final String IS_ALLOW_OPTION = "/uapi/pointsaggregate/allowoption";
+	
+	/**
+	 *个人积分查询列表
+	 */
+	public static final String O_POINTS_AGGREGATE = "/oapi/pointsaggregate/list";
+	
+	/**
+	 * 积分获取列表
+	 */
+	public static final String O_POINTS_COLLECT = "/oapi/pointscollect/list";
 	
 	
 }

@@ -16,8 +16,11 @@ import com.reps.core.restful.RestBaseController;
 import com.reps.core.restful.RestResponse;
 import com.reps.core.restful.RestResponseStatus;
 import com.reps.jifen.entity.StudyAssessPoints;
+import com.reps.jifen.entity.StudyPjfzszRight;
 import com.reps.jifen.entity.TeacherPjkfpjf;
+import com.reps.jifen.entity.enums.AccessCategory;
 import com.reps.jifen.entity.enums.MarkCategory;
+import com.reps.jifen.service.IStudyPjfzszRightService;
 import com.reps.jifen.service.IAssessPointsService;
 import com.reps.jifen.service.ITeacherPjkfpjfService;
 
@@ -37,6 +40,9 @@ public class TeachJfRest extends RestBaseController {
 	
 	@Autowired
 	ITeacherPjkfpjfService kfpService;
+	
+	@Autowired
+	IStudyPjfzszRightService allocationService;
 
 	@RequestMapping(value = "/list")
 	public RestResponse<Map<String, Object>> list(StudyAssessPoints query) {
@@ -48,10 +54,15 @@ public class TeachJfRest extends RestBaseController {
 				result.setMessage("奖励/惩罚类别不能为空");
 				return result;
 			}
+			String personId = getCurrentLoginInfo().getPersonId();
 			query.setIsEnable(1);
-			List<Map<String, Object>> listMap = new ArrayList<>();
 			List<StudyAssessPoints> list = assessPointsService.find(query);
-			fillStudyRewardList(list, listMap);
+			//查询校园行为规则
+			StudyPjfzszRight alloQuery = new StudyPjfzszRight();
+			alloQuery.setTeacherId(personId);
+			List<StudyPjfzszRight> studyList = allocationService.find(alloQuery);
+			List<String> alloList = fillAllocationMap(studyList);
+			List<Map<String, Object>> listMap = fillStudyRewardList(list, alloList, personId);
 			map.put("data", listMap);
 			result.setResult(map);
 		} catch (Exception e) {
@@ -120,18 +131,51 @@ public class TeachJfRest extends RestBaseController {
 		return result;
 	}
 	
-	private void fillStudyRewardList(List<StudyAssessPoints> list, List<Map<String, Object>> listMap) {
+	private List<Map<String, Object>> fillStudyRewardList(List<StudyAssessPoints> list, List<String> alloList, String personId) {
+		List<Map<String, Object>> listMap = new ArrayList<>();
 		if (list != null && !list.isEmpty()) {
 			for (StudyAssessPoints data : list) {
 				Map<String, Object> map = new HashMap<>();
-				map.put("id", data.getId());
-				map.put("item", data.getItem());
-				map.put("category", data.getCategory());
-				map.put("mark", data.getMark());
-				map.put("pointsScope", data.getPointsScope());
-				map.put("icon", this.getFileHttpPath() + data.getIcon());
+				if (AccessCategory.XYXW.getCode().equals(data.getCategory())) {
+					if (isInAlloList(personId, alloList)) {
+						map.put("id", data.getId());
+						map.put("item", data.getItem());
+						map.put("category", data.getCategory());
+						map.put("mark", data.getMark());
+						map.put("pointsScope", data.getPointsScope());
+						map.put("icon", this.getFileHttpPath() + data.getIcon());
+					}
+				} else {
+					map.put("id", data.getId());
+					map.put("item", data.getItem());
+					map.put("category", data.getCategory());
+					map.put("mark", data.getMark());
+					map.put("pointsScope", data.getPointsScope());
+					map.put("icon", this.getFileHttpPath() + data.getIcon());
+				}
 				listMap.add(map);
 			}
 		}
+		return listMap;
+	}
+	
+	private List<String> fillAllocationMap(List<StudyPjfzszRight> list) {
+		List<String> sList = new ArrayList<>();
+		if (list != null && !list.isEmpty()) {
+			for (StudyPjfzszRight data : list) {
+				sList.add(data.getTeacherId());
+			}
+		}
+		return sList;
+	}
+	
+	private boolean isInAlloList(String personId, List<String> alloList) {
+		boolean flag = false;
+		if (alloList != null && !alloList.isEmpty()) {
+			if (alloList.contains(personId)) {
+				flag = true;
+			}
+		}
+		return flag;
 	}
 }

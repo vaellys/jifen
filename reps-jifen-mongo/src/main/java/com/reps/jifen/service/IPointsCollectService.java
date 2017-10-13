@@ -24,4 +24,6 @@ public interface IPointsCollectService {
 	 */
 	public ListResult<PointsCollect> findByPersonId(String personId, Integer pageIndex, Integer pageSize) throws RepsException;  
 	
+	public ListResult<PointsCollect> query(PointsCollect pointsCollect, Integer pageIndex, Integer pageSize) throws RepsException;
+	
 }

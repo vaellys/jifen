@@ -100,6 +100,8 @@ public class ParentPointsAssignRest extends RestBaseController {
 				aggregate.setTotalPoints(0);
 				aggregate.setTotalPointsUsable(0);
 				aggregate.setLevel((short) 0);
+				aggregate.setPersonName(info.getStudentName());
+				aggregate.setSchoolName(info.getSchoolName());
 				aggreateService.save(aggregate);
 			}
 			// 修改个人积分表

@@ -1,24 +1,9 @@
-package com.reps.jifen.entity;
+package com.reps.jifen.vo;
 
-import java.io.Serializable;
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.Transient;
-
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import net.minidev.json.annotate.JsonIgnore;
-
-/**
- * 个人积分获取记录
- * @author qianguobing
- * @date 2017年9月6日 下午3:24:29
- */
-@Document(collection = "reps_jf_points_collect")
-public class PointsCollect implements Serializable{
+public class PointsCollect {
 	
-	private static final long serialVersionUID = 5845280450059451585L;
-
 	/** 人员ID */
 	private String personId;
 	
@@ -40,10 +25,10 @@ public class PointsCollect implements Serializable{
 	private String recordId;
 	
 	/** 获取时间 */
-	private Date getTime;
+	private String getTime;
 	
 	/** 收集时间 */
-	private Date collectTime;
+	private String collectTime;
 	
 	/** 本次总积分 */
 	private Integer totalPoints;
@@ -52,20 +37,16 @@ public class PointsCollect implements Serializable{
 	private Integer totalPointsUsable;
 	
 	@JsonIgnore
-	@Transient
-	private Date beginTime;
+	private String beginTimeDisp = "";
 	
 	@JsonIgnore
-	@Transient
-	private Date endTime;
+	private String endTimeDisp = "";
 	
 	@JsonIgnore
-	@Transient
-	private String beginTimeDisp;
+	private String beginTime;
 	
 	@JsonIgnore
-	@Transient
-	private String endTimeDisp;
+	private String endTime;
 	
 	public String getPersonId() {
 		return personId;
@@ -115,21 +96,6 @@ public class PointsCollect implements Serializable{
 		this.recordId = recordId;
 	}
 
-	public Date getGetTime() {
-		return getTime;
-	}
-
-	public void setGetTime(Date getTime) {
-		this.getTime = getTime;
-	}
-
-	public Date getCollectTime() {
-		return collectTime;
-	}
-
-	public void setCollectTime(Date collectTime) {
-		this.collectTime = collectTime;
-	}
 
 	public Integer getTotalPoints() {
 		return totalPoints;
@@ -155,22 +121,6 @@ public class PointsCollect implements Serializable{
 		this.personName = personName;
 	}
 
-	public Date getBeginTime() {
-		return beginTime;
-	}
-
-	public void setBeginTime(Date beginTime) {
-		this.beginTime = beginTime;
-	}
-
-	public Date getEndTime() {
-		return endTime;
-	}
-
-	public void setEndTime(Date endTime) {
-		this.endTime = endTime;
-	}
-	
 	public String getBeginTimeDisp() {
 		return beginTimeDisp;
 	}
@@ -186,11 +136,37 @@ public class PointsCollect implements Serializable{
 	public void setEndTimeDisp(String endTimeDisp) {
 		this.endTimeDisp = endTimeDisp;
 	}
-	
-	@Override
-	public String toString() {
-		return "JfPointsCollect [personId=" + personId + ", getFrom=" + getFrom + ", ruleName=" + ruleName + ", ruleCode=" + ruleCode + ", points=" + points + ", recordId=" + recordId + ", getTime="
-				+ getTime + ", collectTime=" + collectTime + ", totalPoints=" + totalPoints + ", totalPointsUsable=" + totalPointsUsable + "]";
+
+	public String getGetTime() {
+		return getTime;
 	}
-	
+
+	public void setGetTime(String getTime) {
+		this.getTime = getTime;
+	}
+
+	public String getCollectTime() {
+		return collectTime;
+	}
+
+	public void setCollectTime(String collectTime) {
+		this.collectTime = collectTime;
+	}
+
+	public String getBeginTime() {
+		return beginTime;
+	}
+
+	public void setBeginTime(String beginTime) {
+		this.beginTime = beginTime;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
 }

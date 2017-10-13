@@ -34,27 +34,24 @@
 	<reps:panel id="mybody" dock="center">
 		<reps:grid id="infoList" items="${list}" form="queryForm" var="info" pagination="${pager}" flagSeq="false">
 			<reps:gridrow>
-				<c:choose>
-					<c:when test="${empty info.auditStatus }">
-						<reps:gridcheckboxfield checkboxName="id" align="center" title="" width="5">${info.id}</reps:gridcheckboxfield>
-					</c:when>
-					<c:otherwise>
-						<reps:gridfield title="" width="1" align="center"><span></span></reps:gridfield>
-   					</c:otherwise>
-				</c:choose>
+				<input type="hidden" value="${info.auditStatus}" id="auditStatus"/>
+				<reps:gridcheckboxfield  checkboxName="id" align="center" title="" width="3" >${info.id}</reps:gridcheckboxfield>
 				<reps:gridfield title="活动参与者" width="15" align="center">${info.student.person.name}</reps:gridfield>
-				<reps:gridfield title="学校" width="25" align="center">${info.school.organize.name }</reps:gridfield>
-				<reps:gridfield title="年级" width="30" align="center">
+				<reps:gridfield title="学校" width="15" align="center">${info.school.organize.name }</reps:gridfield>
+				<reps:gridfield title="年级" width="15" align="center">
 					<sys:dictionary src="grade">${info.grade}</sys:dictionary>
 				</reps:gridfield>
-				<reps:gridfield title="班级" width="25" align="center">${info.classes.name}</reps:gridfield>
-				<reps:gridfield title="审核状态" width="15" align="center"><c:if test="${info.auditStatus == '1'}">审核通过</c:if><c:if test="${info.auditStatus == '2' }">驳回</c:if><c:if test="${empty info.auditStatus}">待审核</c:if></reps:gridfield>
-				<c:if test="${empty info.auditStatus}">
-					<reps:gridfield title="操作" width="25" align="center">
-							<reps:dialog cssClass="audit-table" id="audit" iframe="true" width="450"
-								 height="300" url="toaudit.mvc?id=${info.id}" value="审核"></reps:dialog>
+				<reps:gridfield title="班级" width="15" align="center">${info.classes.name}</reps:gridfield>
+				<reps:gridfield title="审核状态" width="15" align="center"><c:if test="${info.auditStatus == '1'}">通过</c:if><c:if test="${info.auditStatus == '2' }">驳回</c:if><c:if test="${empty info.auditStatus}">待审核</c:if></reps:gridfield>
+				<reps:gridfield title="操作" width="15" align="center">
+					<c:if test="${empty info.auditStatus}">
+						<reps:dialog cssClass="audit-table" id="audit" iframe="true" width="450"
+							 height="300" url="toaudit.mvc?id=${info.id}" value="审核"></reps:dialog>
+					</c:if>
+					<c:if test="${not empty info.auditStatus}">
+						<reps:button cssClass="audit-table"  value="审核" action="#" ></reps:button>
+					</c:if>
 				</reps:gridfield>
-				</c:if>
 			</reps:gridrow>
 		</reps:grid>
 	</reps:panel>
@@ -71,13 +68,13 @@
 	}
 		
 	function buildIdParams(msg){
-		if ($("input[type=checkbox][name=id]:checked").length == 0) {
+		if ($("input[type=checkbox][name=id][datastatus='audit']:checked").length == 0) {
 			messager.info(msg);
 			return false;
 		}
 		var ids = $("input[type=hidden][name=ids]");
 		ids.val("");
-		$.each($("input[type=checkbox][name=id]:checked"), function(i, obj) {
+		$.each($("input[type=checkbox][name=id][datastatus='audit']:checked"), function(i, obj) {
 			if (ids.val() == "") {
 				ids.val($(obj).val());
 			} else {
@@ -104,7 +101,25 @@
 			return false;
 		}
 	};
-	
+	$(function(){
+		var $td = $("#infoList").find("tr").find("td");
+		$td.find("input").each(function(){
+			var $a = $(this).parents("tr").find("input");
+			if(1 == $a.val() || 2 == $a.val()){
+				$(this).css("display","none")
+			}else{
+				$(this).attr("datastatus", "audit");
+			}
+		})
+		
+		$td.find("a").each(function(){
+			var $a = $(this).parents("tr").find("input");
+			if(1 == $a.val() || 2 == $a.val()){
+				$(this).css("cursor", "default");
+				$(this).css("color", "gray");
+			}
+		})
+	})
 	
 </script>
 </body>

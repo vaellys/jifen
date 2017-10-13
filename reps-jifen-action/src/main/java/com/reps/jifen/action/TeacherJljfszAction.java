@@ -44,6 +44,8 @@ public class TeacherJljfszAction extends BaseAction {
 
 	private final Log logger = LogFactory.getLog(TeacherJljfszAction.class);
 	
+	private final String teacherIdentity = "20";
+	
 	@Autowired
 	IUserService userService;
 	
@@ -226,6 +228,7 @@ public class TeacherJljfszAction extends BaseAction {
 	    organize.setParentXpath(token.getParentIdsXpath() + "/" + token.getOrganizeId());
 	    //organize.setParentXpath("-1/43312620160501org000000000000000");
 	    user.setOrganize(organize);
+	    user.setIdentity(teacherIdentity);
 	    ListResult<User> listResult = this.userService.query(pager.getStartRow(), pager.getPageSize(), user, null, filterSelected, selectedUserIds);
 
 	    pager.setTotalRecord(listResult.getCount().longValue());

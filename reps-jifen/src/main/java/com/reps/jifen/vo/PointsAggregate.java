@@ -1,24 +1,8 @@
-package com.reps.jifen.entity;
+package com.reps.jifen.vo;
 
-import java.io.Serializable;
-
-import javax.persistence.Id;
 import javax.persistence.Transient;
 
-import org.springframework.data.mongodb.core.mapping.Document;
-
-/**
- * 个人积分汇总
- * @author qianguobing
- * @date 2017年9月7日 上午9:01:49
- */
-@Document(collection = "reps_jf_points_aggregate")
-public class PointsAggregate implements Serializable{
-	
-	private static final long serialVersionUID = 879865376296672774L;
-
-	@Id
-	private String id;
+public class PointsAggregate {
 	
 	/** 人员ID */
 	private String personId;
@@ -78,14 +62,6 @@ public class PointsAggregate implements Serializable{
 		this.level = level;
 	}
 
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-	
 	public String getRanking() {
 		return ranking;
 	}
@@ -118,9 +94,4 @@ public class PointsAggregate implements Serializable{
 		this.schoolName = schoolName;
 	}
 
-	@Override
-	public String toString() {
-		return "JfPointsAggregate [personId=" + personId + ", totalPoints=" + totalPoints + ", totalPointsUsable=" + totalPointsUsable + ", level=" + level + "]";
-	} 
-	
 }

@@ -1,6 +1,5 @@
 package com.reps.jifen.dao;
 
-import static com.reps.jifen.entity.enums.AuditStatus.REJECTED;
 import static com.reps.jifen.entity.enums.ParticipateStatus.PARTICIPATED;
 
 import java.util.List;
@@ -129,9 +128,7 @@ public class ActivityInfoDao {
 			 }
 			 Short auditStatus = activityInfo.getAuditStatus();
 			 if(null != auditStatus) {
-				 if(REJECTED.getId().shortValue() == auditStatus.shortValue()) {
-					 dc.add(Restrictions.ne("auditStatus", auditStatus));
-				 }
+				dc.add(Restrictions.or(Restrictions.eq("auditStatus", auditStatus), Restrictions.isNull("auditStatus")));
 			 }
 		 }
 	     return dao.findByCriteria(dc);

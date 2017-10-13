@@ -95,28 +95,32 @@
 		path = path.replaceAll("\\\\","/");
 		var picture = path.replace("${imageUploadPath}","");
 		$("#rewardUrlTwo").val(picture);
-		$("#rewardPicTwo").html(picture);
+		var delHtml = '<a href="#" class="delete-a" onclick="deletePicture($(\'#rewardPicTwo\'),$(\'#rewardUrlTwo\'));"><span>删除</span></a>';
+		$("#rewardPicTwo").html(picture + delHtml);
 	};
 	
 	var getPathNameThree = function(filename, fileType, fileSize, path) {
 		path = path.replaceAll("\\\\","/");
 		var picture = path.replace("${imageUploadPath}","");
 		$("#rewardUrlThree").val(picture);
-		$("#rewardPicThree").html(picture);
+		var delHtml = '<a href="#" class="delete-a" onclick="deletePicture($(\'#rewardPicThree\'),$(\'#rewardUrlThree\'));"><span>删除</span></a>';
+		$("#rewardPicThree").html(picture + delHtml);
 	};
 	
 	var getPathNameFour = function(filename, fileType, fileSize, path) {
 		path = path.replaceAll("\\\\","/");
 		var picture = path.replace("${imageUploadPath}","");
 		$("#rewardUrlFour").val(picture);
-		$("#rewardPicFour").html(picture);
+		var delHtml = '<a href="#" class="delete-a" onclick="deletePicture($(\'#rewardPicFour\'),$(\'#rewardUrlFour\'));"><span>删除</span></a>';
+		$("#rewardPicFour").html(picture + delHtml);
 	};
 	
 	var getPathNameFive = function(filename, fileType, fileSize, path) {
 		path = path.replaceAll("\\\\","/");
 		var picture = path.replace("${imageUploadPath}","");
 		$("#rewardUrlFive").val(picture);
-		$("#rewardPicFive").html(picture);
+		var delHtml = '<a href="#" class="delete-a" onclick="deletePicture($(\'#rewardPicFive\'),$(\'#rewardUrlFive\'));"><span>删除</span></a>';
+		$("#rewardPicFive").html(picture + delHtml);
 	};
 	
 	var checkIndexPicture = function(){
@@ -128,6 +132,11 @@
   			return true;
   		}
   	}
+	
+	function deletePicture($objText, $objInput){
+		$objText.empty();
+		$objInput.val("");
+	}
 	
 </script>
 </html>

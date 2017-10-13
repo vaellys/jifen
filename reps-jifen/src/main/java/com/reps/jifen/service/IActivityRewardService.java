@@ -100,6 +100,6 @@ public interface IActivityRewardService {
 	 * @param serverPath
 	 * @throws Exception
 	 */
-	public void updatePublish(String id, Short status, String serverPath) throws Exception;
+	public void updatePublish(String id, Short status, String serverPath) throws RepsException;
 
 }

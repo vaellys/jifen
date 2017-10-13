@@ -1,24 +1,33 @@
 package com.reps.jifen.action;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.reps.core.LoginToken;
 import com.reps.core.RepsConstant;
 import com.reps.core.commons.Pagination;
 import com.reps.core.exception.RepsException;
 import com.reps.core.orm.ListResult;
 import com.reps.core.web.AjaxStatus;
 import com.reps.core.web.BaseAction;
+import com.reps.jifen.entity.StudyPjfzszRight;
 import com.reps.jifen.entity.StudyAssessPoints;
 import com.reps.jifen.entity.enums.AccessCategory;
+import com.reps.jifen.service.IStudyPjfzszRightService;
 import com.reps.jifen.service.IAssessPointsService;
 import com.reps.jifen.vo.ConfigurePath;
+import com.reps.system.entity.Organize;
+import com.reps.system.entity.User;
+import com.reps.system.service.IUserService;
 
 /**
  * 校园/学习评价分值设置
@@ -31,8 +40,16 @@ public class AssessPointsAction extends BaseAction {
 	
 	private final Log logger = LogFactory.getLog(AssessPointsAction.class);
 	
+	private final String teacherIdentity = "20";
+	
 	@Autowired
 	IAssessPointsService assessPointsService;
+	
+	@Autowired
+	IUserService userService;
+	
+	@Autowired
+	IStudyPjfzszRightService allocationService;
 
 	@RequestMapping(value = "/xxlist")
 	public ModelAndView xxlist(Pagination pager, StudyAssessPoints query) {
@@ -185,6 +202,76 @@ public class AssessPointsAction extends BaseAction {
 			assessPointsService.delete(id);
 		}
 		return ajax(AjaxStatus.OK, "删除成功");
+	}
+	
+	@RequestMapping(value = "/fplist")
+	public ModelAndView fpList(Pagination pager, StudyPjfzszRight query) {
+		ModelAndView mav = getModelAndView("/jifen/pjfzsz/fplist");
+		ListResult<StudyPjfzszRight> result = allocationService
+				.query(pager.getStartRow(), pager.getPageSize(), query);
+		pager.setTotalRecord(result.getCount());
+		mav.addObject("list", result.getList());
+		mav.addObject("pager", pager);
+		mav.addObject("query", query);
+		mav.addObject("behaviorId", query.getBehaviorId());
+		mav.addObject("actionBasePath", RepsConstant.ACTION_BASE_PATH);
+		return mav;
+	}
+	
+	@RequestMapping(value = "/saverule")
+	@ResponseBody
+	public Object saveQuota(StudyPjfzszRight query) {
+		try {
+			List<StudyPjfzszRight> list = allocationService.find(query);
+			if (list == null || list.isEmpty()) {
+				StudyPjfzszRight data = new StudyPjfzszRight();
+				BeanUtils.copyProperties(query, data);
+				allocationService.save(data);
+			}
+			return ajax(AjaxStatus.OK, "保存成功");
+		} catch (Exception e) {
+			logger.error("保存失败", e);
+			return ajax(AjaxStatus.ERROR, "保存异常:" + e.getMessage());
+		}
+	}
+	
+	@RequestMapping(value = "/delrule")
+	@ResponseBody
+	public Object deleteQuota(String id) throws RepsException {
+		allocationService.delete(id);
+		return ajax(AjaxStatus.OK, "删除成功");
+	}
+	
+	@RequestMapping(value = "/teachers")
+	public ModelAndView teachers(Pagination pager, User user, String dialogId, String showName, String hideName, String hideNameValue, String callBack, boolean filterSelected) {
+		ModelAndView mav = getModelAndView("/jifen/pjfzsz/teachers");
+		String[] selectedUserIds = null;
+	    if (StringUtils.isNotBlank(hideNameValue)) {
+	      selectedUserIds = hideNameValue.split(",");
+	    }
+	    LoginToken token = getCurrentToken();
+	    Organize organize = new Organize();
+	    organize.setParentXpath(token.getParentIdsXpath() + "/" + token.getOrganizeId());
+	    //organize.setParentXpath("-1/43312620160501org000000000000000");
+	    user.setOrganize(organize);
+	    user.setIdentity(teacherIdentity);
+	    ListResult<User> listResult = this.userService.query(pager.getStartRow(), pager.getPageSize(), user, null, filterSelected, selectedUserIds);
+
+	    pager.setTotalRecord(listResult.getCount().longValue());
+
+	    mav.addObject("list", listResult.getList());
+
+	    mav.addObject("pager", pager);
+
+	    mav.addObject("user", user);
+	    mav.addObject("dialogId", dialogId);
+	    mav.addObject("showName", showName);
+	    mav.addObject("hideName", hideName);
+	    mav.addObject("hideNameValue", hideNameValue);
+	    mav.addObject("callBack", callBack);
+	    mav.addObject("actionBasePath", "/reps");
+	    mav.addObject("admins", RepsConstant.getAdmins());
+		return mav;
 	}
 	
 }

@@ -38,11 +38,6 @@ public class OrderInfoDao {
 		}
 	}
 	
-	public void delete(OrderInfo data) {
-		dao.merge(data);
-		dao.delete(data);;
-	}
-	
 	public List<OrderInfo> find(OrderInfo query) {
 		DetachedCriteria dc = DetachedCriteria.forClass(OrderInfo.class);
 		dc.createAlias("reward", "reward");

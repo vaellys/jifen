@@ -32,6 +32,12 @@
 					<reps:ajax cssClass="delete-table" messageCode="manage.action.delete" confirm="您确定要删除所选行吗？"
 						redirect="list.mvc" url="delete.mvc?id=${item.id}">
 					</reps:ajax>
+					<c:if test="${item.isEnabled == '0'}">
+						<reps:ajax  cssClass="start-use-table" url="edit.mvc?id=${item.id}&isEnabled=1" confirm="你确定要启用吗？" redirect="list.mvc" value="启用"></reps:ajax>
+					</c:if>
+					<c:if test="${item.isEnabled == '1'}">
+						<reps:ajax  cssClass="stop-use-table" url="edit.mvc?id=${item.id}&isEnabled=0" confirm="你确定要禁用吗？" redirect="list.mvc" value="禁用"></reps:ajax>
+					</c:if>
 				</reps:gridfield>
 			</reps:gridrow>
 		</reps:grid>

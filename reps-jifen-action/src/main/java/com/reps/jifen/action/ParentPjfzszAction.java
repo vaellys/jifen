@@ -87,11 +87,17 @@ public class ParentPjfzszAction extends BaseAction {
 	 * @return ModelAndView
 	 */
 	@RequestMapping(value = "/toedit")
-	public ModelAndView toEdit(String id) {
-		ModelAndView mav = getModelAndView("/jifen/parentpjfzsz/edit");
-		ParentPjfzsz jfParentPjfzsz = jfParentPjfzszService.get(id);
-		mav.addObject("parentPjfzsz", jfParentPjfzsz);
-		return mav;
+	public Object toEdit(String id) {
+		try {
+			ModelAndView mav = getModelAndView("/jifen/parentpjfzsz/edit");
+			ParentPjfzsz jfParentPjfzsz = jfParentPjfzszService.get(id);
+			mav.addObject("parentPjfzsz", jfParentPjfzsz);
+			return mav;
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("修改失败", e);
+			return ajax(AjaxStatus.ERROR, e.getMessage());
+		}
 	}
 	
 	/**
@@ -161,11 +167,17 @@ public class ParentPjfzszAction extends BaseAction {
 	 * @return ModelAndView
 	 */
 	@RequestMapping({ "/show" })
-	public ModelAndView show(String id) {
-		ModelAndView mav = new ModelAndView("/jifen/parentpjfzsz/show");
-		ParentPjfzsz jfParentPjfzsz = jfParentPjfzszService.get(id);
-		mav.addObject("parentPjfzsz", jfParentPjfzsz);
-		return mav;
+	public Object show(String id) {
+		try {
+			ModelAndView mav = new ModelAndView("/jifen/parentpjfzsz/show");
+			ParentPjfzsz jfParentPjfzsz = jfParentPjfzszService.get(id);
+			mav.addObject("parentPjfzsz", jfParentPjfzsz);
+			return mav;
+		} catch (RepsException e) {
+			e.printStackTrace();
+			logger.error("查看详情失败", e);
+			return ajax(AjaxStatus.ERROR, e.getMessage());
+		}
 	}
 
 }

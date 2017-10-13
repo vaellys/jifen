@@ -45,11 +45,6 @@ public class OrderInfoServiceImpl implements IOrderInfoService {
 	}
 
 	@Override
-	public void delete(OrderInfo data) {
-		orderInfoDao.delete(data);
-	}
-
-	@Override
 	public List<OrderInfo> find(OrderInfo query) {
 		return orderInfoDao.find(query);
 	}
