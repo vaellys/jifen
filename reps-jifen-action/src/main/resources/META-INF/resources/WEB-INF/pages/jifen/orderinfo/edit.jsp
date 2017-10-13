@@ -26,12 +26,6 @@
 		   <reps:formfield label="联系电话"  labelStyle="width:20%;" textStyle="width:20%;">
 				<reps:input name="phone"  maxLength="15" required="true" >${data.phone}</reps:input>
            </reps:formfield>
-           <reps:formfield label="快递公司"  labelStyle="width:20%;" textStyle="width:20%;">
-				<reps:input name="expressCompany"  maxLength="15" >${data.expressCompany}</reps:input>
-           </reps:formfield>
-           <reps:formfield label="运单号"  labelStyle="width:20%;" textStyle="width:20%;">
-				<reps:input name="shipmentNo"  maxLength="15" >${data.shipmentNo}</reps:input>
-           </reps:formfield>
 	   </reps:formcontent>
 	    <reps:formbar style="margin-top:50px">
   		   <reps:ajax confirm="你确定要提交吗？" formId="xform"  type="link" cssClass="btn_save_a" callBack="my"  messageCode="edit.button.save"/>

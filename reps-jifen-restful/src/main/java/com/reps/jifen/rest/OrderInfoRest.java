@@ -216,6 +216,7 @@ public class OrderInfoRest extends RestBaseController {
 	
 	private void convertMap(OrderInfo data, Map<String, Object> map) {
 		map.put("id", data.getId());
+		map.put("orderNo", data.getOrderNo());
 		map.put("consigneeName", data.getConsigneeName());
 		map.put("address", data.getAddress());
 		map.put("phone", data.getPhone());

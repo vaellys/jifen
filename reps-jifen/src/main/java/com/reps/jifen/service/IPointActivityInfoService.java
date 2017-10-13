@@ -27,5 +27,11 @@ public interface IPointActivityInfoService {
 	public List<PointActivityInfo> find(PointActivityInfo activityInfo) throws RepsException;
 	
 	public List<PointActivityInfo> findNotAudit(PointActivityInfo activityInfo) throws RepsException;
+
+	/**
+	 * 活动参与超过截止时间时，管理员还没审核，则系统自动审核通过
+	 * 定时任务，每天凌晨2点执行一次
+	 */
+	public void scheduleAudit();
 	
 }

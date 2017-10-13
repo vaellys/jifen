@@ -80,10 +80,10 @@
 					<reps:ajax id="delete"  url="delete.mvc?ids=${data.id}" value="删除"
 							cssClass="delete-table" confirm="你确定要删除吗？" redirect="xxlist.mvc"></reps:ajax>
 					<c:if test="${data.isEnable=='0'}">
-						<reps:ajax  cssClass="modify-table" url="isenable.mvc?id=${data.id}&isEnable=1" confirm="你确定要启用吗？" redirect="xxlist.mvc" value="启用"></reps:ajax>
+						<reps:ajax  cssClass="start-use-table" url="isenable.mvc?id=${data.id}&isEnable=1" confirm="你确定要启用吗？" redirect="xxlist.mvc" value="启用"></reps:ajax>
 					</c:if>
 					<c:if test="${data.isEnable=='1'}">
-						<reps:ajax  cssClass="modify-table" url="isenable.mvc?id=${data.id}&isEnable=0" confirm="你确定要禁用吗？" redirect="xxlist.mvc" value="禁用"></reps:ajax>
+						<reps:ajax  cssClass="stop-use-table" url="isenable.mvc?id=${data.id}&isEnable=0" confirm="你确定要禁用吗？" redirect="xxlist.mvc" value="禁用"></reps:ajax>
 					</c:if>
 				</reps:gridfield>
 			</reps:gridrow>

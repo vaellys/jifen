@@ -1,7 +1,5 @@
 package com.reps.jifen.dao;
 
-import static com.reps.jifen.entity.enums.ParticipateStatus.PARTICIPATED;
-
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -78,8 +76,16 @@ public class ActivityInfoDao {
 			if(StringUtil.isNotBlank(rewardId)) {
 				dc.add(Restrictions.eq("rewardId", rewardId));
 			}
+			Short isParticipate = activityInfo.getIsParticipate();
+			if(null != isParticipate) {
+				dc.add(Restrictions.eq("isParticipate", isParticipate));
+			}
+			//获取我参与的活动列表
+			String studentId = activityInfo.getStudentId();
+			if(StringUtil.isNotBlank(studentId)) {
+				dc.add(Restrictions.eq("studentId", studentId));
+			}
 		}
-		dc.add(Restrictions.eq("isParticipate", PARTICIPATED.getId()));
 		return dao.query(dc, start, pagesize, Order.asc("createTime"));
 	}
 	

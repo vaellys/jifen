@@ -63,7 +63,7 @@ public class HttpRequstUtil {
         out.flush();
         // 定义BufferedReader输入流来读取URL的响应
         in = new BufferedReader(
-                new InputStreamReader(conn.getInputStream()));
+                new InputStreamReader(conn.getInputStream(), "UTF-8"));
         String line;
         while ((line = in.readLine()) != null) {
             result += line;

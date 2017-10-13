@@ -33,10 +33,10 @@
 						redirect="list.mvc" url="delete.mvc?id=${item.id}">
 					</reps:ajax>
 					<c:if test="${item.isEnabled == '0'}">
-						<reps:ajax  cssClass="start-use-table" url="edit.mvc?id=${item.id}&isEnabled=1" confirm="你确定要启用吗？" redirect="list.mvc" value="启用"></reps:ajax>
+						<reps:ajax  cssClass="start-use-table" url="edit.mvc?id=${item.id}&isEnabled=1" confirm="你确定要启用吗？" callBack="my" value="启用"></reps:ajax>
 					</c:if>
 					<c:if test="${item.isEnabled == '1'}">
-						<reps:ajax  cssClass="stop-use-table" url="edit.mvc?id=${item.id}&isEnabled=0" confirm="你确定要禁用吗？" redirect="list.mvc" value="禁用"></reps:ajax>
+						<reps:ajax  cssClass="stop-use-table" url="edit.mvc?id=${item.id}&isEnabled=0" confirm="你确定要禁用吗？" callBack="my" value="禁用"></reps:ajax>
 					</c:if>
 				</reps:gridfield>
 			</reps:gridrow>
@@ -45,8 +45,10 @@
 </reps:container>
 <script type="text/javascript">
 	var my = function(data){
-		window.location.href= "list.mvc";
-	};
+		messager.message(data, function(){
+			window.location.href= "list.mvc";
+		});
+	}
 	
 	var checkChecked = function() {
 		if ($("input[type=checkbox][name=id]:checked").length == 0) {

@@ -412,6 +412,10 @@ public class ActivityRewardAction extends BaseAction {
 	public Object list(Pagination pager, PointActivityInfo activityInfo) {
 		ModelAndView mav = getModelAndView("/jifen/activityreward/statistics");
 		try {
+			if(null == activityInfo) {
+				throw new RepsException("参数异常");
+			}
+			activityInfo.setIsParticipate(PARTICIPATED.getId());
 			//查询学生参与该活动列表
 			ListResult<PointActivityInfo> listResult = activityInfoService.query(pager.getStartRow(), pager.getPageSize(), activityInfo);
 			String rewardId = activityInfo.getRewardId();

@@ -33,8 +33,11 @@ public class PointsAggregate implements Serializable{
 	private Short level;
 	
 	/**排名占比*/
+	private Float beat;
+	
+	/**排名*/
 	@Transient
-	private String ranking;
+	private int top;
 	
 	/**距离下一级所需积分*/
 	@Transient
@@ -85,14 +88,6 @@ public class PointsAggregate implements Serializable{
 	public void setId(String id) {
 		this.id = id;
 	}
-	
-	public String getRanking() {
-		return ranking;
-	}
-
-	public void setRanking(String ranking) {
-		this.ranking = ranking;
-	}
 
 	public Integer getNeedPoints() {
 		return needPoints;
@@ -116,6 +111,22 @@ public class PointsAggregate implements Serializable{
 
 	public void setSchoolName(String schoolName) {
 		this.schoolName = schoolName;
+	}
+
+	public int getTop() {
+		return top;
+	}
+
+	public void setTop(int top) {
+		this.top = top;
+	}
+
+	public Float getBeat() {
+		return beat;
+	}
+
+	public void setBeat(Float beat) {
+		this.beat = beat;
 	}
 
 	@Override

@@ -1,7 +1,13 @@
 package com.reps.jifen.rest;
 
+import static com.reps.jifen.entity.enums.ActivityStatus.PUBLISHED;
+import static com.reps.jifen.entity.enums.ParticipateStatus.ACTIVITY_CANCELLED;
+import static com.reps.jifen.entity.enums.ParticipateStatus.AUDIT_PASSED;
+import static com.reps.jifen.entity.enums.ParticipateStatus.AUDIT_REJECTED;
 import static com.reps.jifen.entity.enums.ParticipateStatus.CANCEL_PARTICIPATE;
 import static com.reps.jifen.entity.enums.ParticipateStatus.PARTICIPATED;
+import static com.reps.jifen.util.PageUtil.cps;
+import static com.reps.jifen.util.PageUtil.getStartIndex;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.reps.core.exception.RepsException;
+import com.reps.core.orm.ListResult;
 import com.reps.core.restful.AuthInfo;
 import com.reps.core.restful.RestBaseController;
 import com.reps.core.restful.RestResponse;
@@ -27,7 +34,6 @@ import com.reps.jifen.constant.UrlConstant;
 import com.reps.jifen.entity.ActivityReward;
 import com.reps.jifen.entity.PointActivityInfo;
 import com.reps.jifen.entity.PointReward;
-import static com.reps.jifen.entity.enums.ActivityStatus.*;
 import com.reps.jifen.service.IActivityRewardService;
 import com.reps.jifen.service.IPointActivityInfoService;
 import com.reps.jifen.util.ConvertUrlUtil;
@@ -142,7 +148,7 @@ public class ActivityRewardRest extends RestBaseController {
 				throw new RepsException(jsonObject.getString("message"));
 			} 
 		}else {
-			throw new RepsException("网络异常");
+			throw new RepsException("请求异常");
 		}
 	}
 	
@@ -220,6 +226,12 @@ public class ActivityRewardRest extends RestBaseController {
 					statusMap.put(PARTICIPATE_STATUS, PARTICIPATED.getId());
 				}else if(CANCEL_PARTICIPATE.getId().shortValue() == isParticipate.shortValue()) {
 					statusMap.put(PARTICIPATE_STATUS, CANCEL_PARTICIPATE.getId());
+				}else if(AUDIT_PASSED.getId().shortValue() == isParticipate.shortValue()) {
+					statusMap.put(PARTICIPATE_STATUS, AUDIT_PASSED.getId());
+				}else if(AUDIT_REJECTED.getId().shortValue() == isParticipate.shortValue()) {
+					statusMap.put(PARTICIPATE_STATUS, AUDIT_REJECTED.getId());
+				}else if(ACTIVITY_CANCELLED.getId().shortValue() == isParticipate.shortValue()) {
+					statusMap.put(PARTICIPATE_STATUS, ACTIVITY_CANCELLED.getId());
 				}
 			}
 			return wrap(RestResponseStatus.OK, "检查活动状态正常", statusMap);
@@ -227,6 +239,21 @@ public class ActivityRewardRest extends RestBaseController {
 			e.printStackTrace();
 			logger.error("检查活动状态异常", e);
 			return wrap(RestResponseStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+		}
+	}
+	
+	@RequestMapping(value = "/list")
+	public RestResponse<ListResult<PointActivityInfo>> list(PointActivityInfo info, Integer pageIndex, Integer pageSize) {
+		try {
+			pageSize = cps(pageSize);
+			ListResult<PointActivityInfo> result = activityInfoService.query(getStartIndex(pageIndex, pageSize), pageSize, info);
+			// 设置页大小
+			result.setPageSize(pageSize);
+			return wrap(RestResponseStatus.OK, "查询成功", result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("查询异常", e);
+			return wrap(RestResponseStatus.INTERNAL_SERVER_ERROR, "查询异常:" + e.getMessage());
 		}
 	}
 	

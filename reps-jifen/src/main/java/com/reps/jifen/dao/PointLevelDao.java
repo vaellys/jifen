@@ -47,7 +47,7 @@ public class PointLevelDao {
 				dc.add(Restrictions.eq("level", level));
 			}
 		}
-		return dao.query(dc, start, pagesize);
+		return dao.query(dc, start, pagesize, Order.asc("level"));
 	}
 	
 	public List<PointLevel> queryAll(PointLevel jfPointLevel) {

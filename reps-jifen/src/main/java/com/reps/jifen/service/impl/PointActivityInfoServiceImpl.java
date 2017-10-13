@@ -1,5 +1,12 @@
 package com.reps.jifen.service.impl;
 
+import static com.reps.core.util.DateUtil.format;
+import static com.reps.core.util.DateUtil.getDateFromStr;
+import static com.reps.jifen.entity.enums.AuditStatus.CHECK_PENDING;
+import static com.reps.jifen.entity.enums.AuditStatus.PASSED;
+import static com.reps.jifen.entity.enums.AuditStatus.REJECTED;
+import static com.reps.jifen.entity.enums.ParticipateStatus.AUDIT_PASSED;
+import static com.reps.jifen.entity.enums.ParticipateStatus.AUDIT_REJECTED;
 import static com.reps.jifen.entity.enums.ParticipateStatus.CANCEL_PARTICIPATE;
 import static com.reps.jifen.entity.enums.ParticipateStatus.PARTICIPATED;
 import static com.reps.jifen.util.ActivityUtil.doPosts;
@@ -9,7 +16,10 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.reps.core.exception.RepsException;
@@ -18,7 +28,6 @@ import com.reps.core.util.StringUtil;
 import com.reps.jifen.dao.ActivityInfoDao;
 import com.reps.jifen.entity.ActivityReward;
 import com.reps.jifen.entity.PointActivityInfo;
-import com.reps.jifen.entity.enums.AuditStatus;
 import com.reps.jifen.service.IActivityRewardService;
 import com.reps.jifen.service.IPointActivityInfoService;
 
@@ -30,6 +39,8 @@ import com.reps.jifen.service.IPointActivityInfoService;
 @Service
 @Transactional
 public class PointActivityInfoServiceImpl implements IPointActivityInfoService {
+	
+	private Logger logger = LoggerFactory.getLogger(PointActivityInfoServiceImpl.class);
 	
 	@Autowired
 	ActivityInfoDao dao;
@@ -75,9 +86,6 @@ public class PointActivityInfoServiceImpl implements IPointActivityInfoService {
 
 	@Override
 	public ListResult<PointActivityInfo> query(int start, int pagesize, PointActivityInfo activityInfo) throws RepsException{
-		if(null == activityInfo) {
-			throw new RepsException("参数异常");
-		}
 		return dao.query(start, pagesize, activityInfo);
 	}
 
@@ -129,7 +137,7 @@ public class PointActivityInfoServiceImpl implements IPointActivityInfoService {
 		Short isParticipate = pointActivityInfo.getIsParticipate();
 		Short auditStatus = pointActivityInfo.getAuditStatus();
 		if(null != auditStatus) {
-			if(AuditStatus.PASSED.getId().shortValue() == auditStatus.shortValue()) {
+			if(PASSED.getId().shortValue() == auditStatus.shortValue()) {
 				throw new RepsException("活动异常:该参与活动已经审核通过，不能取消");
 			}
 		}
@@ -198,12 +206,16 @@ public class PointActivityInfoServiceImpl implements IPointActivityInfoService {
 		if(null == points) {
 			throw new RepsException("该活动数据异常");
 		}
-		if(AuditStatus.REJECTED.getId().shortValue() == auditStatus.shortValue()) {
+		if(REJECTED.getId().shortValue() == auditStatus.shortValue()) {
 			//请求mongodb 修改个人积分，保存积分日志
 			doPosts(studentId, rewardId, points, serverPath);
 			//修改活动记录表和活动信息表状态
 			//cancelParticipate(buildParam(activityInfo, auditStatus, studentId, rewardId));
+			//同时更新参与状态
+			activityInfo.setIsParticipate(AUDIT_REJECTED.getId());
 		}
+		//同时更新参与状态
+		activityInfo.setIsParticipate(AUDIT_PASSED.getId());
 		update(buildParam(activityInfo, auditStatus, studentId, rewardId));
 	}
 
@@ -213,6 +225,7 @@ public class PointActivityInfoServiceImpl implements IPointActivityInfoService {
 		info.setAuditOpinion(activityInfo.getAuditOpinion());
 		info.setStudentId(studentId);
 		info.setRewardId(rewardId);
+		info.setIsParticipate(activityInfo.getIsParticipate());
 		return info;
 	}
 	
@@ -224,6 +237,37 @@ public class PointActivityInfoServiceImpl implements IPointActivityInfoService {
 	@Override
 	public List<PointActivityInfo> findNotAudit(PointActivityInfo activityInfo) throws RepsException {
 		return dao.findNotAudit(activityInfo);
+	}
+	
+	@Scheduled(cron = "0 0 2 * * ?")
+//	@Scheduled(cron = "*/20 * * * * ?")
+	@Override
+	public void scheduleAudit() {
+		try {
+			PointActivityInfo activityInfo = new PointActivityInfo();
+			activityInfo.setAuditStatus(CHECK_PENDING.getId());
+			List<PointActivityInfo> findNotAuditList = dao.findNotAudit(activityInfo);
+			//获取当前系统时间
+			long currentTime = getDateFromStr(format(new Date(), "yyyy-MM-dd"), "yyyy-MM-dd").getTime();
+			for (PointActivityInfo info : findNotAuditList) {
+				ActivityReward pointReward = info.getPointReward();
+				if(null != pointReward) {
+					//获取活动过期时间
+					long expireTime = pointReward.getFinishTime().getTime();
+					if(expireTime - currentTime < 0) {
+						try {
+							info.setAuditStatus(PASSED.getId());
+							this.updateAudit(info, null);
+						} catch (Exception e) {
+							logger.error("活动过期审核状态更新失败,该活动信息为:活动记录ID " + info.getId() + ", 审核状态  " + info.getAuditStatus() + ", 报名截止时间 " + pointReward.getFinishTime());
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("活动审核异常", e);
+		}
 	}
 
 }

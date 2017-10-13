@@ -2,7 +2,7 @@ package com.reps.jifen.action;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -198,6 +198,7 @@ public class TeacherJljfszAction extends BaseAction {
 	public ModelAndView jfszList(TeacherPjkfpjf query, Pagination pager) throws RepsException {
 		ModelAndView mav = getModelAndView("/jifen/jzgjljf/jfszlist");
 		ListResult<TeacherPjkfpjf> result = kfpService.query(query, pager.getStartRow(), pager.getPageSize());
+		pager.setTotalRecord(result.getCount());
 		mav.addObject("list", result.getList());
 		mav.addObject("pager", pager);
 		mav.addObject("query", query);
@@ -212,7 +213,7 @@ public class TeacherJljfszAction extends BaseAction {
 	@RequestMapping(value = "/jljfsz")
 	public ModelAndView jljfsz() {
 		ModelAndView mav = getModelAndView("/jifen/jzgjljf/jljfsz");
-		
+		mav.addObject("actionBasePath", RepsConstant.ACTION_BASE_PATH);
 		return mav;
 	}
 	

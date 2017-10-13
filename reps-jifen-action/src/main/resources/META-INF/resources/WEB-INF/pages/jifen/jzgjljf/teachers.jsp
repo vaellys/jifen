@@ -58,7 +58,7 @@ var choosePerson = function(id, name,organizeId, callBack){
 	
 	//执行回调方法
 	if (callBack){
-		eval("window.parent." + callBack + "('" + id + "','" + name + "')");
+		eval("window.parent." + callBack + "('" + id + "','" + name + "', '"+organizeId+"')");
 	}
 }
 </script>

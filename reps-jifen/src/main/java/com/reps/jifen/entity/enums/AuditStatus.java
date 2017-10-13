@@ -2,7 +2,7 @@ package com.reps.jifen.entity.enums;
 
 public enum AuditStatus {
 	
-	PASSED((short)1, "通过"), REJECTED((short) 2, "驳回");
+	PASSED((short)1, "通过"), REJECTED((short) 2, "驳回"), CHECK_PENDING((short)0, "待审核");
 	
 	private Short id;
 	

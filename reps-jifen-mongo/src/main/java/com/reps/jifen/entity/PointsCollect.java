@@ -7,66 +7,67 @@ import javax.persistence.Transient;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import net.minidev.json.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * 个人积分获取记录
+ * 
  * @author qianguobing
  * @date 2017年9月6日 下午3:24:29
  */
 @Document(collection = "reps_jf_points_collect")
-public class PointsCollect implements Serializable{
-	
+public class PointsCollect implements Serializable {
+
 	private static final long serialVersionUID = 5845280450059451585L;
 
 	/** 人员ID */
 	private String personId;
-	
+
 	private String personName;
-	
+
 	/** 积分来源 */
 	private String getFrom;
-	
+
 	/** 规则名称 */
 	private String ruleName;
-	
+
 	/** 规则标识码 */
 	private String ruleCode;
-	
+
 	/** 积分值 */
 	private Integer points;
-	
+
 	/** 来源记录ID */
 	private String recordId;
-	
+
 	/** 获取时间 */
 	private Date getTime;
-	
+
 	/** 收集时间 */
 	private Date collectTime;
-	
+
 	/** 本次总积分 */
 	private Integer totalPoints;
-	
+
 	/** 本次可用积分 */
 	private Integer totalPointsUsable;
-	
+
 	@JsonIgnore
 	@Transient
 	private Date beginTime;
-	
+
 	@JsonIgnore
 	@Transient
 	private Date endTime;
-	
+
 	@JsonIgnore
 	@Transient
 	private String beginTimeDisp;
-	
+
 	@JsonIgnore
 	@Transient
 	private String endTimeDisp;
-	
+
 	public String getPersonId() {
 		return personId;
 	}
@@ -170,7 +171,7 @@ public class PointsCollect implements Serializable{
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
-	
+
 	public String getBeginTimeDisp() {
 		return beginTimeDisp;
 	}
@@ -186,11 +187,15 @@ public class PointsCollect implements Serializable{
 	public void setEndTimeDisp(String endTimeDisp) {
 		this.endTimeDisp = endTimeDisp;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "JfPointsCollect [personId=" + personId + ", getFrom=" + getFrom + ", ruleName=" + ruleName + ", ruleCode=" + ruleCode + ", points=" + points + ", recordId=" + recordId + ", getTime="
-				+ getTime + ", collectTime=" + collectTime + ", totalPoints=" + totalPoints + ", totalPointsUsable=" + totalPointsUsable + "]";
+		return "JfPointsCollect [personId=" + personId + ", getFrom=" + getFrom
+				+ ", ruleName=" + ruleName + ", ruleCode=" + ruleCode
+				+ ", points=" + points + ", recordId=" + recordId
+				+ ", getTime=" + getTime + ", collectTime=" + collectTime
+				+ ", totalPoints=" + totalPoints + ", totalPointsUsable="
+				+ totalPointsUsable + "]";
 	}
-	
+
 }

@@ -32,7 +32,7 @@ public class PointsAggregateServiceImpl implements IPointsAggregateService {
 	private IPointsAggregateRepository repository;
 	
 	@Autowired
-	MongoTemplate mongoTemplate;
+	private MongoTemplate mongoTemplate;
 	
 	@Override
 	public List<PointsAggregate> findByPersonId(String personId) {

@@ -45,6 +45,7 @@ public class OrderInfoAction extends BaseAction {
 		ModelAndView mav = getModelAndView("/jifen/orderinfo/list");
 		ListResult<OrderInfo> result = goodsService.query(
 				pager.getStartRow(), pager.getPageSize(), query);
+		pager.setTotalRecord(result.getCount());
 		mav.addObject("list", result.getList());
 		mav.addObject("pager", pager);
 		mav.addObject("query", query);

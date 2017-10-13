@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.reps.core.orm.IdEntity;
@@ -61,6 +62,7 @@ public class PointActivityInfo extends IdEntity implements Serializable{
 	@Column(name = "classes_id")
 	private String classesId;
 	
+	@JsonIgnore
 	@ManyToOne(cascade={})
 	@JoinColumn(name="classes_id", insertable = false, updatable = false)
 	private Classes classes;
@@ -80,8 +82,12 @@ public class PointActivityInfo extends IdEntity implements Serializable{
 	/** 统计时间 */
 	@Column(name = "create_time")
 	private Date createTime;
+	
+	@Transient
+	private String activityName;
 
 	public String getRewardId() {
+		this.activityName = null != this.pointReward ? this.pointReward.getName() : "";
 		return rewardId;
 	}
 
@@ -170,10 +176,14 @@ public class PointActivityInfo extends IdEntity implements Serializable{
 	}
 
 	public ActivityReward getPointReward() {
+		if(null != pointReward) {
+			this.setActivityName(pointReward.getName());
+		}
 		return pointReward;
 	}
 
 	public void setPointReward(ActivityReward pointReward) {
+		this.setActivityName(pointReward.getName());
 		this.pointReward = pointReward;
 	}
 
@@ -183,6 +193,14 @@ public class PointActivityInfo extends IdEntity implements Serializable{
 
 	public void setClasses(Classes classes) {
 		this.classes = classes;
+	}
+
+	public String getActivityName() {
+		return activityName;
+	}
+
+	public void setActivityName(String activityName) {
+		this.activityName = activityName;
 	}
 	
 }

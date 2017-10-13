@@ -1,9 +1,10 @@
 package com.reps.jifen.rest;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+
+import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -25,8 +26,6 @@ import com.reps.jifen.entity.PointsAggregate;
 import com.reps.jifen.service.IPointsAggregateService;
 import com.reps.jifen.util.HttpRequstUtil;
 import com.reps.jifen.vo.UrlConstant;
-
-import net.sf.json.JSONObject;
 
 @RestController
 @RequestMapping(value = "/uapi/pointsaggregate")
@@ -51,13 +50,7 @@ public class PointsAggregateRest extends RestBaseController{
 					if (personId.equals(data.getPersonId())) {
 						pointsAggregate = new PointsAggregate();
 						BeanUtils.copyProperties(data, pointsAggregate);
-						if (i == 0) {
-							pointsAggregate.setRanking("0%");
-						} else if (i == pointList.size() - 1) {
-							pointsAggregate.setRanking("99%");
-						} else {
-							pointsAggregate.setRanking(getPercent(Float.intBitsToFloat(i), Float.intBitsToFloat(pointList.size())));
-						}
+						pointsAggregate.setTop(i + 1);
 						JSONObject jsonObject = HttpRequstUtil.getGetUrlResponse(levelUrl 
 								+ UrlConstant.GET_LV_POINTS + "?access_token=" + request.getParameter("access_token")
 								+ "&points=" + pointsAggregate.getTotalPoints() + "&level=" + pointsAggregate.getLevel());
@@ -99,10 +92,5 @@ public class PointsAggregateRest extends RestBaseController{
 			logger.error("查询异常", e);
 			return wrap(RestResponseStatus.INTERNAL_SERVER_ERROR, "查询异常：" + e.getMessage());
 		}
-	}
-	
-	private String getPercent(float index, float size) {
-		DecimalFormat df = new DecimalFormat("##%");
- 		return df.format((index / size));
 	}
 }

@@ -34,8 +34,11 @@
 				<reps:gridfield title="姓名" width="15" align="center">
 					${data.teacher.person.name}
 				</reps:gridfield>
-				<reps:gridfield title="单位或学校" width="30" align="center">
+				<reps:gridfield title="单位或学校" width="20" align="center">
 					${data.organize.name}
+				</reps:gridfield>
+				<reps:gridfield title="证件号码" width="20" align="center">
+					${data.teacher.person.icNumber}
 				</reps:gridfield>
 				<reps:gridfield title="可分配积分" width="15" align="center">
 					${data.pointsLeft}

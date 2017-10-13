@@ -15,6 +15,8 @@
 		<module>reps-jifen</module>
 		<module>reps-jifen-action</module>
 		<module>reps-jifen-restful</module>
+		<module>reps-jifen-mongo</module>
+		<module>reps-jifen-mongo-restful</module>
 	</modules>
 	<properties>
 		<reps.new.version>2.0.1-SNAPSHOT</reps.new.version>

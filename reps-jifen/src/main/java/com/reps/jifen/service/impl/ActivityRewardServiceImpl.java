@@ -4,7 +4,7 @@ import static com.reps.core.util.DateUtil.format;
 import static com.reps.core.util.DateUtil.getDateFromStr;
 import static com.reps.jifen.entity.enums.AuditStatus.PASSED;
 import static com.reps.jifen.entity.enums.CategoryType.ACTIVITY;
-import static com.reps.jifen.entity.enums.ParticipateStatus.PARTICIPATED;
+import static com.reps.jifen.entity.enums.ParticipateStatus.*;
 import static com.reps.jifen.entity.enums.ActivityStatus.*;
 import static com.reps.jifen.entity.enums.ValidRecord.VALID;
 import static com.reps.jifen.util.ActivityUtil.doPosts;
@@ -217,8 +217,13 @@ public class ActivityRewardServiceImpl implements IActivityRewardService {
 			//取消活动时，此人为参与中，审核状态为未审核和审核通过，这些人返还积分
 			activityInfo.setIsParticipate(PARTICIPATED.getId());
 			List<PointActivityInfo> list = pointActivityInfoService.findNotAudit(activityInfo);
-			for (PointActivityInfo pointActivityInfo : list) {
-				this.cancelActivity(pointActivityInfo, pointReward.getPoints(), serverPath);
+			if(null != list && list.size() > 0) {
+				for (PointActivityInfo pointActivityInfo : list) {
+					this.cancelActivity(pointActivityInfo, pointReward.getPoints(), serverPath);
+					//同时更新活动记录表参与状态为已取消 4
+					pointActivityInfo.setIsParticipate(ACTIVITY_CANCELLED.getId());
+					pointActivityInfoService.update(pointActivityInfo);
+				}
 			}
 		}else {
 			//检查截止时间
