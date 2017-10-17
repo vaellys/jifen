@@ -48,6 +48,9 @@ public class PointsAggregate implements Serializable{
 	
 	/** 学校名字 */
 	private String schoolName;
+	
+	/** 头像地址 */
+	private String url;
 
 	public String getPersonId() {
 		return personId;
@@ -127,6 +130,14 @@ public class PointsAggregate implements Serializable{
 
 	public void setBeat(Float beat) {
 		this.beat = beat;
+	}
+	
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	@Override

@@ -63,7 +63,7 @@
 					<c:if test="${activity.isShown == '0'}">
 						<reps:ajax cssClass="publish-table" value="发布" confirm="您确定要发布吗？"  callBack="my" beforeCall="checkFinishTime(this)" url="batchpublish.mvc?ids=${activity.id }&status=1"></reps:ajax>
 					</c:if>
-					<c:if test="${activity.isShown == '0' || activity.isShown == '2'}">
+					<c:if test="${activity.isShown == '0' || activity.isShown == '2' || activity.isShown == '1'}">
 						<reps:button cssClass="modify-table" messageCode="manage.action.update" action="toedit.mvc?id=${activity.id}" ></reps:button>
 					</c:if>
 					<c:if test="${activity.isShown == '0' || activity.isShown == '2' || activity.isShown == '3'}">
@@ -125,8 +125,8 @@
 		var currentTime = new Date();
 		var finishTime = $(obj).parents("tr").find("input[name='finishTime']").val();
 		finishTime = new Date(finishTime);
-		if(finishTime.getTime() >= currentTime.getTime()){
-			messager.info("报名截止时间大于或等于当前时间,请修改截止时间后再发布！");
+		if(finishTime.getTime() < currentTime.getTime()){
+			messager.info("报名截止时间小于当前时间,请修改截止时间后再发布！");
 			return false;
 		}else{
 			return true;

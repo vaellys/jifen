@@ -12,6 +12,8 @@ import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.reps.core.orm.IdEntity;
+import com.reps.jifen.entity.enums.ActivityStatus;
+import com.reps.jifen.entity.enums.ParticipateStatus;
 import com.reps.school.entity.Classes;
 import com.reps.school.entity.School;
 import com.reps.school.entity.Student;
@@ -88,6 +90,8 @@ public class PointActivityInfo extends IdEntity implements Serializable{
 
 	public String getRewardId() {
 		this.activityName = null != this.pointReward ? this.pointReward.getName() : "";
+		this.isParticipate = null != this.pointReward && ActivityStatus.CANCELLED.getIndex().shortValue() == this.pointReward.getIsShown().shortValue() ? ParticipateStatus.ACTIVITY_CANCELLED.getId()
+				: isParticipate;
 		return rewardId;
 	}
 

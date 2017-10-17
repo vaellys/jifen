@@ -1,7 +1,6 @@
 package com.reps.jifen.rest;
 
 import static com.reps.jifen.entity.enums.ActivityStatus.PUBLISHED;
-import static com.reps.jifen.entity.enums.ParticipateStatus.ACTIVITY_CANCELLED;
 import static com.reps.jifen.entity.enums.ParticipateStatus.AUDIT_PASSED;
 import static com.reps.jifen.entity.enums.ParticipateStatus.AUDIT_REJECTED;
 import static com.reps.jifen.entity.enums.ParticipateStatus.CANCEL_PARTICIPATE;
@@ -230,8 +229,6 @@ public class ActivityRewardRest extends RestBaseController {
 					statusMap.put(PARTICIPATE_STATUS, AUDIT_PASSED.getId());
 				}else if(AUDIT_REJECTED.getId().shortValue() == isParticipate.shortValue()) {
 					statusMap.put(PARTICIPATE_STATUS, AUDIT_REJECTED.getId());
-				}else if(ACTIVITY_CANCELLED.getId().shortValue() == isParticipate.shortValue()) {
-					statusMap.put(PARTICIPATE_STATUS, ACTIVITY_CANCELLED.getId());
 				}
 			}
 			return wrap(RestResponseStatus.OK, "检查活动状态正常", statusMap);
@@ -245,6 +242,13 @@ public class ActivityRewardRest extends RestBaseController {
 	@RequestMapping(value = "/list")
 	public RestResponse<ListResult<PointActivityInfo>> list(PointActivityInfo info, Integer pageIndex, Integer pageSize) {
 		try {
+			if(null == info) {
+				throw new RepsException("参数异常");
+			}
+			String studentId = info.getStudentId();
+			if(StringUtil.isBlank(studentId)) {
+				throw new RepsException("查询异常:学生ID不能为空");
+			}
 			pageSize = cps(pageSize);
 			ListResult<PointActivityInfo> result = activityInfoService.query(getStartIndex(pageIndex, pageSize), pageSize, info);
 			// 设置页大小

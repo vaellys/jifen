@@ -16,7 +16,7 @@ public interface IPointActivityInfoService {
 	
 	public ListResult<PointActivityInfo> query(int start, int pagesize, PointActivityInfo activityInfo) throws RepsException;
 	
-	public Long count(String rewardId, Short isParticipate) throws RepsException;
+	public Long count(String rewardId, List<Short> isParticipates) throws RepsException;
 
 	public PointActivityInfo get(PointActivityInfo activityInfo) throws RepsException;
 
@@ -32,6 +32,6 @@ public interface IPointActivityInfoService {
 	 * 活动参与超过截止时间时，管理员还没审核，则系统自动审核通过
 	 * 定时任务，每天凌晨2点执行一次
 	 */
-	public void scheduleAudit();
+	public void updateScheduleAudit();
 	
 }

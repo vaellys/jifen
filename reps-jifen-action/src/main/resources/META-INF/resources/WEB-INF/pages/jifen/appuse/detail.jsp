@@ -30,7 +30,7 @@
 				   <c:if test="${info.mark eq 0}">奖励</c:if>
 			   </reps:detailfield>
 
-			   <reps:detailfield label="是否需要审核" fullRow="true"
+			 <%--   <reps:detailfield label="是否需要审核" fullRow="true"
 								 labelStyle="width:20%;">
 				   <c:if test="${info.needCheck eq 1}">需要审核</c:if>
 				   <c:if test="${info.needCheck eq 0}">不需要审核</c:if>
@@ -40,7 +40,7 @@
 								 labelStyle="width:20%;">
 				   <c:if test="${info.isEnabled eq 1}">启用</c:if>
 				   <c:if test="${info.isEnabled eq 0}">不启用</c:if>
-			   </reps:detailfield>
+			   </reps:detailfield> --%>
 	        </reps:detail>
 		   <reps:formbar>
 			   <reps:button cssClass="btn_cancel" type="button" onClick="back()" messageCode="add.button.cancel" />

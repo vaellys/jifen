@@ -78,7 +78,7 @@ public class ActivityInfoDao {
 			}
 			Short isParticipate = activityInfo.getIsParticipate();
 			if(null != isParticipate) {
-				dc.add(Restrictions.eq("isParticipate", isParticipate));
+				dc.add(Restrictions.ne("isParticipate", isParticipate));
 			}
 			//获取我参与的活动列表
 			String studentId = activityInfo.getStudentId();
@@ -95,10 +95,10 @@ public class ActivityInfoDao {
 	 * @param isParticipate
 	 * @return Long
 	 */
-	public Long count(String rewardId, Short isParticipate) {
+	public Long count(String rewardId, List<Short> values) {
 	    DetachedCriteria dc = DetachedCriteria.forClass(PointActivityInfo.class);
 	    dc.add(Restrictions.eq("rewardId", rewardId));
-	    dc.add(Restrictions.eq("isParticipate", isParticipate));
+	    dc.add(Restrictions.in("isParticipate", values));
 	    return this.dao.getRowCount(dc);
 	}
 	

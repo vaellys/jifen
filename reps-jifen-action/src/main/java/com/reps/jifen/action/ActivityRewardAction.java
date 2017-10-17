@@ -1,9 +1,9 @@
 package com.reps.jifen.action;
 
 import static com.reps.jifen.entity.enums.CategoryType.ACTIVITY;
-import static com.reps.jifen.entity.enums.ParticipateStatus.CANCEL_PARTICIPATE;
-import static com.reps.jifen.entity.enums.ParticipateStatus.PARTICIPATED;
+import static com.reps.jifen.entity.enums.ParticipateStatus.*;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -415,16 +415,16 @@ public class ActivityRewardAction extends BaseAction {
 			if(null == activityInfo) {
 				throw new RepsException("参数异常");
 			}
-			activityInfo.setIsParticipate(PARTICIPATED.getId());
+			activityInfo.setIsParticipate(CANCEL_PARTICIPATE.getId());
 			//查询学生参与该活动列表
 			ListResult<PointActivityInfo> listResult = activityInfoService.query(pager.getStartRow(), pager.getPageSize(), activityInfo);
 			String rewardId = activityInfo.getRewardId();
 			//查询活动信息
 			ActivityReward jfReward = jfActivityRewardService.get(rewardId);
 			//统计参与人数
-			Long participatedCount = activityInfoService.count(rewardId, PARTICIPATED.getId());
+			Long participatedCount = activityInfoService.count(rewardId, Arrays.asList(PARTICIPATED.getId(), AUDIT_PASSED.getId(), AUDIT_REJECTED.getId(), ACTIVITY_CANCELLED.getId()));
 			//统计取消人数
-			Long cancelCount = activityInfoService.count(rewardId, CANCEL_PARTICIPATE.getId());
+			Long cancelCount = activityInfoService.count(rewardId, Arrays.asList(CANCEL_PARTICIPATE.getId()));
 			mav.addObject("activity", jfReward);
 			mav.addObject("info", activityInfo);
 			mav.addObject("participatedCount", participatedCount);

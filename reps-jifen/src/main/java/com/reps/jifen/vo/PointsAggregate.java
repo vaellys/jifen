@@ -29,6 +29,12 @@ public class PointsAggregate {
 	
 	/** 学校名字 */
 	private String schoolName;
+	
+	/**排名占比*/
+	private Float beat;
+	
+	/** 头像地址 */
+	private String url;
 
 	public String getPersonId() {
 		return personId;
@@ -94,4 +100,20 @@ public class PointsAggregate {
 		this.schoolName = schoolName;
 	}
 
+	public Float getBeat() {
+		return beat;
+	}
+
+	public void setBeat(Float beat) {
+		this.beat = beat;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	
 }

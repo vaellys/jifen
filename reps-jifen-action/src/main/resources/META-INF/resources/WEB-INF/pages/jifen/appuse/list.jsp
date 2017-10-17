@@ -33,12 +33,12 @@
                     <c:if test="${item.mark eq 1}">奖励</c:if>
                     <c:if test="${item.mark eq 0}">扣除</c:if>
                 </reps:gridfield>
-                <reps:gridfield title="需要审核" width="8" align="center">
+                <%-- <reps:gridfield title="需要审核" width="8" align="center">
                     <c:if test="${item.needCheck eq 1}">√</c:if>
                 </reps:gridfield>
                 <reps:gridfield title="是否启用" width="8" align="center">
                     <c:if test="${item.isEnabled eq 1}">√</c:if>
-                </reps:gridfield>
+                </reps:gridfield> --%>
                 <reps:gridfield title="操作" width="10" align="center">
                     <reps:button cssClass="detail-table" action="show.mvc?id=${item.id}" messageCode="manage.action.detail" menuCode="jifen070104"></reps:button>
                     <reps:button cssClass="modify-table" action="toedit.mvc?id=${item.id}" messageCode="manage.action.update" menuCode="jifen070102"></reps:button>

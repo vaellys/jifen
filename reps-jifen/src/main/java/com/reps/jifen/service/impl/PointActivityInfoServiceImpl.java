@@ -90,14 +90,14 @@ public class PointActivityInfoServiceImpl implements IPointActivityInfoService {
 	}
 
 	@Override
-	public Long count(String rewardId, Short isParticipate) throws RepsException {
+	public Long count(String rewardId, List<Short> isParticipates) throws RepsException {
 		if(StringUtil.isBlank(rewardId)) {
 			throw new RepsException("统计异常:活动ID不能为空");
 		}
-		if(null == isParticipate) {
+		if(null == isParticipates) {
 			throw new RepsException("统计异常:参与状态不能为空");
 		}
-		return dao.count(rewardId, isParticipate);
+		return dao.count(rewardId, isParticipates);
 	}
 
 	@Override
@@ -213,9 +213,10 @@ public class PointActivityInfoServiceImpl implements IPointActivityInfoService {
 			//cancelParticipate(buildParam(activityInfo, auditStatus, studentId, rewardId));
 			//同时更新参与状态
 			activityInfo.setIsParticipate(AUDIT_REJECTED.getId());
+		}else {
+			//同时更新参与状态
+			activityInfo.setIsParticipate(AUDIT_PASSED.getId());
 		}
-		//同时更新参与状态
-		activityInfo.setIsParticipate(AUDIT_PASSED.getId());
 		update(buildParam(activityInfo, auditStatus, studentId, rewardId));
 	}
 
@@ -240,15 +241,15 @@ public class PointActivityInfoServiceImpl implements IPointActivityInfoService {
 	}
 	
 	@Scheduled(cron = "0 0 2 * * ?")
-//	@Scheduled(cron = "*/20 * * * * ?")
+//	@Scheduled(cron = "*/30 * * * * ?")
 	@Override
-	public void scheduleAudit() {
+	public void updateScheduleAudit() {
 		try {
 			PointActivityInfo activityInfo = new PointActivityInfo();
 			activityInfo.setAuditStatus(CHECK_PENDING.getId());
 			List<PointActivityInfo> findNotAuditList = dao.findNotAudit(activityInfo);
 			//获取当前系统时间
-			long currentTime = getDateFromStr(format(new Date(), "yyyy-MM-dd"), "yyyy-MM-dd").getTime();
+			long currentTime = getDateFromStr(format(new Date(), "yyyy-MM-dd HH:mm:ss"), "yyyy-MM-dd HH:mm:ss").getTime();
 			for (PointActivityInfo info : findNotAuditList) {
 				ActivityReward pointReward = info.getPointReward();
 				if(null != pointReward) {

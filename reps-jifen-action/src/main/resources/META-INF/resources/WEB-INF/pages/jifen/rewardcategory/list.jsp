@@ -34,9 +34,9 @@
 					</c:forEach>
 				</reps:gridfield>
 				<reps:gridfield title="描述" width="40">${category.description}</reps:gridfield>
-				<reps:gridfield title="操作" width="40">
+				<reps:gridfield title="操作" width="25">
 					<reps:button cssClass="detail-table" action="show.mvc?id=${category.id }" value="详细"></reps:button>
-					<reps:button cssClass="add-table" value="添加下级分类" action="toadd.mvc?id=${category.id }"></reps:button>
+					<%-- <reps:button cssClass="add-table" value="添加下级分类" action="toadd.mvc?id=${category.id }"></reps:button> --%>
 					<reps:button cssClass="modify-table" messageCode="manage.action.update" action="toedit.mvc?id=${category.id}"></reps:button>
 					<reps:ajax cssClass="delete-table" messageCode="manage.action.delete" confirm="您确定要删除所选行吗？"
 						callBack="my" url="delete.mvc?id=${category.id}">

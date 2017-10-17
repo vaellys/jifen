@@ -14,7 +14,7 @@
 			<reps:formfield label="物品名称" labelStyle="width:20%;" textStyle="width:27%;">
 				<reps:input name="name" maxLength="30">${jfReward.name }</reps:input>
 			</reps:formfield>
-			<reps:formfield label="活动分类" labelStyle="width:23%;" textStyle="width:30%;">
+			<reps:formfield label="物品分类" labelStyle="width:23%;" textStyle="width:30%;">
 				<reps:select  dataSource="${rewardTypeMap }" name="categoryId">${jfReward.categoryId }</reps:select>
 			</reps:formfield>
 			<reps:formfield label="物品状态" labelStyle="width:23%;" textStyle="width:30%;">
@@ -38,7 +38,7 @@
 				<reps:gridfield title="物品名称" width="25" align="center">${reward.name }</reps:gridfield>
 				<reps:gridfield title="所需积分" width="15" align="center">${reward.points}</reps:gridfield>
 				<reps:gridfield title="库存数量" width="15" align="center">${reward.numbers}</reps:gridfield>
-				<reps:gridfield title="已兑换数" width="15" align="center">${reward.exchangedCount}</reps:gridfield>
+				<reps:gridfield title="已兑换数" width="15" align="center">${empty reward.exchangedCount ? 0 : reward.exchangedCount}</reps:gridfield>
 				<%-- <reps:gridfield title="物品详情" width="40">${reward.description}</reps:gridfield> --%>
 				<reps:gridfield title="物品状态" width="15" align="center"><c:if test="${reward.isShown == '1'}">已发布</c:if><c:if test="${reward.isShown == '0' }">未发布</c:if><c:if test="${reward.isShown == '2' }">已下架</c:if></reps:gridfield>
 				<%-- <reps:gridfield title="已参与/已兑换" width="25" align="center"></reps:gridfield> --%>

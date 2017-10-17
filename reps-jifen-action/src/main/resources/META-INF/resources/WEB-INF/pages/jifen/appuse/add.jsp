@@ -26,12 +26,12 @@
 			   <reps:formfield label="奖励/扣除" fullRow="true">
 				   <reps:select name="mark" jsonData="{'1':'奖励','0':'扣除'}" headerValue="" required="true"></reps:select>
 			   </reps:formfield>
-			   <reps:formfield label="是否需要审核" fullRow="true">
+			  <%--   <reps:formfield label="是否需要审核" fullRow="true">
 				   <reps:select name="needCheck" jsonData="{'0':'不需要审核','1':'需要审核'}" required="true"></reps:select>
 			   </reps:formfield>
 			   <reps:formfield label="是否启用" fullRow="true">
 				   <reps:select name="isEnabled" jsonData="{1:'是',0:'否'}" headerValue="" style="width:180px;" required="true"></reps:select>
-			   </reps:formfield>
+			   </reps:formfield> --%>
 	        </reps:formcontent>
 		   <reps:formbar>
 			   <reps:ajax cssClass="btn_save" type="button" callBack="my" formId="xform"  messageCode="add.button.save" />
