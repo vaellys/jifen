@@ -7,6 +7,7 @@ import static com.reps.jifen.entity.enums.ParticipateStatus.CANCEL_PARTICIPATE;
 import static com.reps.jifen.entity.enums.ParticipateStatus.PARTICIPATED;
 import static com.reps.jifen.util.PageUtil.cps;
 import static com.reps.jifen.util.PageUtil.getStartIndex;
+import static com.reps.jifen.util.RewardUtil.setActivityInfo;
 
 import java.util.HashMap;
 import java.util.List;
@@ -251,8 +252,12 @@ public class ActivityRewardRest extends RestBaseController {
 			}
 			pageSize = cps(pageSize);
 			ListResult<PointActivityInfo> result = activityInfoService.query(getStartIndex(pageIndex, pageSize), pageSize, info);
+			if(null == result) {
+				throw new RepsException("查询活动记录列表异常");
+			}
 			// 设置页大小
 			result.setPageSize(pageSize);
+			setActivityInfo(result.getList(), this.getFileHttpPath());
 			return wrap(RestResponseStatus.OK, "查询成功", result);
 		} catch (Exception e) {
 			e.printStackTrace();

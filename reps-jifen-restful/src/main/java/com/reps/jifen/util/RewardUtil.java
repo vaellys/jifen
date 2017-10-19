@@ -11,6 +11,7 @@ import java.util.Map;
 import com.reps.core.exception.RepsException;
 import com.reps.core.util.StringUtil;
 import com.reps.jifen.entity.ActivityReward;
+import com.reps.jifen.entity.PointActivityInfo;
 import com.reps.jifen.entity.PointReward;
 import com.reps.jifen.entity.RewardCategory;
 
@@ -112,6 +113,27 @@ public class RewardUtil {
 			}else {
 				jfReward.setPicture(picture);
 			}
+		}
+	}
+	
+	public static void setActivityInfo(List<PointActivityInfo> list, String imageServerPath) throws RepsException{
+		for (PointActivityInfo jfReward : list) {
+			ActivityReward pointReward = jfReward.getPointReward();
+			if(null != pointReward) {
+				jfReward.setActivityName(pointReward.getName());
+				jfReward.setParticipatedCount(pointReward.getParticipatedCount());
+				jfReward.setIsShown(pointReward.getIsShown());
+				String picture = pointReward.getPicture();
+				if(StringUtil.isNotBlank(picture)) {
+					jfReward.setPicture(imageServerPath + picture);
+				}else {
+					jfReward.setPicture(picture);
+				}
+			}else {
+				throw new RepsException("活动信息异常");
+			}
+			Short auditStatus = jfReward.getAuditStatus();
+			jfReward.setAuditStatus(null == auditStatus ? 0 : auditStatus);
 		}
 	}
 	

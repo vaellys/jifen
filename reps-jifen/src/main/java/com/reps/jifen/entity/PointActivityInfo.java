@@ -87,9 +87,20 @@ public class PointActivityInfo extends IdEntity implements Serializable{
 	
 	@Transient
 	private String activityName;
-
+	
+	@Transient
+	private Integer participatedCount;
+	
+	@Transient
+	private Integer points;
+	
+	@Transient
+	private Short isShown;
+	
+	@Transient
+	private String picture;
+	
 	public String getRewardId() {
-		this.activityName = null != this.pointReward ? this.pointReward.getName() : "";
 		this.isParticipate = null != this.pointReward && ActivityStatus.CANCELLED.getIndex().shortValue() == this.pointReward.getIsShown().shortValue() ? ParticipateStatus.ACTIVITY_CANCELLED.getId()
 				: isParticipate;
 		return rewardId;
@@ -205,6 +216,38 @@ public class PointActivityInfo extends IdEntity implements Serializable{
 
 	public void setActivityName(String activityName) {
 		this.activityName = activityName;
+	}
+
+	public Integer getParticipatedCount() {
+		return participatedCount;
+	}
+
+	public void setParticipatedCount(Integer participatedCount) {
+		this.participatedCount = participatedCount;
+	}
+
+	public Integer getPoints() {
+		return points;
+	}
+
+	public void setPoints(Integer points) {
+		this.points = points;
+	}
+
+	public Short getIsShown() {
+		return isShown;
+	}
+
+	public void setIsShown(Short isShown) {
+		this.isShown = isShown;
+	}
+
+	public String getPicture() {
+		return picture;
+	}
+
+	public void setPicture(String picture) {
+		this.picture = picture;
 	}
 	
 }
