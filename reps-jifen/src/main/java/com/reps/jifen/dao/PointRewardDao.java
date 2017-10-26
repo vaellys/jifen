@@ -50,6 +50,7 @@ public class PointRewardDao {
 		dc.createAlias("jfRewardCategory", "t");
 		Order order = Order.desc("createTime");
 		dc.add(Restrictions.eq("validRecord", ValidRecord.VALID.getId()));
+		String sortField = "";
 		if (jfReward != null) {
 			String name = jfReward.getName();
 			if (StringUtil.isNotBlank(name)) {
@@ -85,9 +86,12 @@ public class PointRewardDao {
 			if(null != points) {
 				dc.add(Restrictions.le("points", points));
 			}
-			String sortField = jfReward.getSortField();
-			sortField = StringUtil.isBlank(sortField) ? "points" : sortField;
+			sortField = jfReward.getSortField();
+			//sortField = StringUtil.isBlank(sortField) ? "points" : sortField;
 			order = "asc".equalsIgnoreCase(jfReward.getSortOrder()) ? Order.asc(sortField) : Order.desc(sortField);
+		}
+		if(StringUtil.isBlank(sortField)) {
+			order = Order.asc("isShown");
 		}
 		return dao.query(dc, start, pagesize, order);
 	}

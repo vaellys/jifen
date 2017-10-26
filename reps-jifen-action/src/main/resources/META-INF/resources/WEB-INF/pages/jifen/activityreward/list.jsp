@@ -37,8 +37,8 @@
 				<input type="hidden" name="activityStatus" value="${activity.isShown }">
 				<input type="hidden" name="finishTime" value="${activity.finishTime }"/>
 				<%-- <reps:gridcheckboxfield checkboxName="id" align="center" title="" width="5">${activity.id}</reps:gridcheckboxfield> --%>
-				<reps:gridfield title="活动分类" width="15" align="center">${activity.jfRewardCategory.name}</reps:gridfield>
 				<reps:gridfield title="活动名称" width="25" align="center">${activity.name }</reps:gridfield>
+				<reps:gridfield title="活动分类" width="15" align="center">${activity.jfRewardCategory.name}</reps:gridfield>
 				<reps:gridfield title="所需积分" width="15" align="center">${activity.points}</reps:gridfield>
 				<reps:gridfield title="报名截至时间" width="25" align="center">
 					<fmt:formatDate value="${activity.finishTime }" pattern="yyyy-MM-dd"/>

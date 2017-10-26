@@ -22,9 +22,9 @@
 				<reps:gridfield title="评分项" width="15" align="center">${item.item}</reps:gridfield>
 				<reps:gridfield title="具体行为内容" width="40" align="center">${item.content}</reps:gridfield>
 				<reps:gridfield title="奖励积分" width="40" align="center" style="color: #196ed8;">${item.pointsScopeDisp}</reps:gridfield>
-				<reps:gridfield title="适用年级" width="40" align="center">
-					<sys:dictionary src="grade">${item.applyGrade}</sys:dictionary>
-				</reps:gridfield>
+				<%-- <reps:gridfield title="适用年级" width="40" align="center">
+					<sys:dictionary src="grade" >${item.applyGrade}</sys:dictionary>
+				</reps:gridfield> --%>
 				<reps:gridfield title="是否可用" width="15" align="center">${item.isEnabled eq 1 ? '是' : '否'}</reps:gridfield>
 				<reps:gridfield title="操作" width="40">
 					<reps:button cssClass="detail-table" action="show.mvc?id=${item.id }" value="详细"></reps:button>

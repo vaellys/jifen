@@ -30,7 +30,7 @@
 				<reps:gridfield title="性别" width="12" align="center"><sys:dictionary src="sex">${user.account.person.sex}</sys:dictionary></reps:gridfield>
 				<reps:gridfield title="登录名" width="28" align="center">${user.account.loginName}</reps:gridfield>
 				<reps:gridfield title="民族" width="15" align="center"><sys:dictionary src="ethnicity">${user.account.person.ethnicity}</sys:dictionary></reps:gridfield>
-				<reps:gridfield title="证件号码" width="35" align="center">${user.account.person.icNumber}</reps:gridfield>
+				<reps:gridfield title="机构名称" width="35" align="center">${user.organize.name}</reps:gridfield>
 				<reps:gridfield title="选择" width="10" align="center">
 					<a class="btnSelect" href="javascript:choosePerson('${user.account.person.id}','${user.account.person.name}','${user.organizeId}','${callBack}');" title="查找带回">选择</a>
 				</reps:gridfield>

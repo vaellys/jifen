@@ -50,7 +50,7 @@ public class PointsAggregate implements Serializable{
 	private String schoolName;
 	
 	/** 头像地址 */
-	private String url;
+	private String avatarUrl;
 
 	public String getPersonId() {
 		return personId;
@@ -132,12 +132,12 @@ public class PointsAggregate implements Serializable{
 		this.beat = beat;
 	}
 	
-	public String getUrl() {
-		return url;
+	public String getAvatarUrl() {
+		return avatarUrl;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setAvatarUrl(String avatarUrl) {
+		this.avatarUrl = avatarUrl;
 	}
 
 	@Override

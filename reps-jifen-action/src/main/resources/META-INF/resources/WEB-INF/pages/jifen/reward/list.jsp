@@ -34,8 +34,8 @@
 		<reps:grid id="rewardList" items="${list}" form="queryForm" var="reward" pagination="${pager}" flagSeq="true">
 			<reps:gridrow>
 				<%-- <reps:gridcheckboxfield checkboxName="id" align="center" title="" width="5">${reward.id}</reps:gridcheckboxfield> --%>
-				<reps:gridfield title="物品分类" width="15" align="center">${reward.jfRewardCategory.name}</reps:gridfield>
 				<reps:gridfield title="物品名称" width="25" align="center">${reward.name }</reps:gridfield>
+				<reps:gridfield title="物品分类" width="15" align="center">${reward.jfRewardCategory.name}</reps:gridfield>
 				<reps:gridfield title="所需积分" width="15" align="center">${reward.points}</reps:gridfield>
 				<reps:gridfield title="库存数量" width="15" align="center">${reward.numbers}</reps:gridfield>
 				<reps:gridfield title="已兑换数" width="15" align="center">${empty reward.exchangedCount ? 0 : reward.exchangedCount}</reps:gridfield>

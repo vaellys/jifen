@@ -55,6 +55,9 @@ public class TeacherPointsAssign implements Serializable{
 	/**规则url*/
 	private String url;
 	
+	/** 头像地址 */
+	private String avatarUrl;
+	
 	public String getTeacherId() {
 		return teacherId;
 	}
@@ -157,6 +160,14 @@ public class TeacherPointsAssign implements Serializable{
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+	
+	public String getAvatarUrl() {
+		return avatarUrl;
+	}
+
+	public void setAvatarUrl(String avatarUrl) {
+		this.avatarUrl = avatarUrl;
 	}
 
 	@Override

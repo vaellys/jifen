@@ -31,6 +31,7 @@ public class PointLevelAction extends BaseAction {
 		ModelAndView mav = getModelAndView("/jifen/pointlevel/list");
 		// 分页数据
 		ListResult<PointLevel> listResult = jfPointLevelService.query(pager.getStartRow(), pager.getPageSize(), jfPointLevel);
+		pager.setTotalRecord(listResult.getCount());
 		mav.addObject("list", listResult.getList());
 		// 分页参数
 		mav.addObject("pager", pager);

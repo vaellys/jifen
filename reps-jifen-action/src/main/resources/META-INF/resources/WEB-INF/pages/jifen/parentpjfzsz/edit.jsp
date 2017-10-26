@@ -20,8 +20,9 @@
 				<reps:select name="pointsScope" jsonData="{'1':'0~1','2':'0~2','3':'0~3','4':'0~4','5':'0~5'}" required="true">${parentPjfzsz.pointsScope }</reps:select>
 			</reps:formfield>
 			<reps:formfield label="适用年级" fullRow="true">
-			<sys:dictionary id="grade" src="grade" name="applyGrade"
-					headerValue="" headerText="" filter="2,3,4" validRecord="true" required="true">${parentPjfzsz.applyGrade}</sys:dictionary>
+			<sys:dictionary src="grade" id="grade" name="applyGrade" filter="2,3,4" required="true" type="checkbox">${parentPjfzsz.applyGrade}</sys:dictionary>
+			<%-- <sys:dictionary id="grade" src="grade" name="applyGrade"
+					headerValue="" headerText="" filter="2,3,4" validRecord="true" required="true">${parentPjfzsz.applyGrade}</sys:dictionary> --%>
 			</reps:formfield>
 			<reps:formfield label="是否可用" fullRow="true">
 				<reps:select name="isEnabled" jsonData="{'1':'是','0':'否'}" required="true">${parentPjfzsz.isEnabled }</reps:select>

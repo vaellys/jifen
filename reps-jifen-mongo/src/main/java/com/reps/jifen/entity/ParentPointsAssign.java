@@ -57,6 +57,10 @@ public class ParentPointsAssign implements Serializable{
 	/**规则id*/
 	@Transient
 	private String ruleId;
+	
+	/** 头像地址 */
+	@Transient
+	private String avatarUrl;
 
 	public String getParentId() {
 		return parentId;
@@ -160,6 +164,14 @@ public class ParentPointsAssign implements Serializable{
 
 	public void setType(String type) {
 		this.type = type;
+	}
+	
+	public String getAvatarUrl() {
+		return avatarUrl;
+	}
+
+	public void setAvatarUrl(String avatarUrl) {
+		this.avatarUrl = avatarUrl;
 	}
 
 	@Override

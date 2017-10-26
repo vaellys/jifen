@@ -8,7 +8,7 @@
 </head>
 <body>
 <reps:container>
-	<reps:panel id="first" dock="top" action="add.mvc" formId="form" validForm="true" >
+	<reps:panel id="first" dock="top" action="add.mvc" formId="form" validForm="true" style="width:800px">
 		<reps:formcontent>
 			<reps:formfield label="评分项"  fullRow="true">
 				<reps:input name="item" maxLength="30" required="true"></reps:input>
@@ -20,8 +20,9 @@
 				<reps:select name="pointsScope" jsonData="{'1':'0~1','2':'0~2','3':'0~3','4':'0~4','5':'0~5'}" required="true"></reps:select>
 			</reps:formfield>
 			<reps:formfield label="适用年级" fullRow="true">
-				<sys:dictionary src="grade" name="applyGrade"
-					headerValue="" headerText="" filter="2,3,4" validRecord="true"  required="true" />
+				<sys:dictionary src="grade" id="grade" name="applyGrade" filter="2,3,4" required="true" type="checkbox"></sys:dictionary>
+				<%-- <sys:dictionary src="grade" name="applyGrade"
+					headerValue="" headerText="" filter="2,3,4" validRecord="true"  required="true" /> --%>
 			</reps:formfield>
 			<reps:formfield label="是否可用" fullRow="true">
 				<reps:select name="isEnabled" jsonData="{'1':'是','0':'否'}" required="true"></reps:select>

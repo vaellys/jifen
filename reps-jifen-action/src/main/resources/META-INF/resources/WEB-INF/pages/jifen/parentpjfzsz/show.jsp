@@ -28,7 +28,8 @@
 				</reps:detailfield>
 				<reps:detailfield label="适用年级" fullRow="true"
 					labelStyle="width:20%;">
-					<sys:dictionary src="grade">${parentPjfzsz.applyGrade}</sys:dictionary>
+					<sys:dictionary src="grade" id="grade" name="applyGrade" filter="2,3,4" required="true" type="checkbox">${parentPjfzsz.applyGrade}</sys:dictionary>
+					<%-- <sys:dictionary src="grade">${parentPjfzsz.applyGrade}</sys:dictionary> --%>
 				</reps:detailfield>
 				<reps:detailfield label="是否可用" fullRow="true"
 					labelStyle="width:20%;">${parentPjfzsz.isEnabled == 1 ? '是' : '否'}</reps:detailfield>
@@ -44,6 +45,13 @@
 			//返回列表页
 			window.location.href = "list.mvc";
 		}
+		$(function(){
+			
+			var $input = $("input[name='applyGrade']");
+			$input.each(function(){
+				$(this).attr("disabled", true);
+			})
+		})
 	</script>
 </body>
 </html>

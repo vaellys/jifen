@@ -26,9 +26,9 @@
 			<reps:ajax cssClass="batch-approval-a" confirm="确认批量审核通过吗?" beforeCall="checkAuditPassed" formId="queryForm" callBack="my" value="批量审核通过" />
 			<reps:ajax cssClass="batch-approval-a" confirm="确认批量审核驳回吗?" beforeCall="checkAuditRejected" formId="queryForm" callBack="my" value="批量审核驳回" />
 			<reps:button cssClass="return-a" onClick="back()" value="返回" />
-			<span style="margin-left:20px;font-size:16px;font-weight:bold;color:red;">活动名称:${activity.name }</span>
-			<span style="margin-left:20px;font-size:16px;font-weight:bold;color:red;">总参与人数:${participatedCount }</span>
-			<span style="margin-left:20px;font-size:16px;font-weight:bold;color:red;">取消参与人数:${cancelCount }</span>
+			<span >活动名称:${activity.name }</span>
+			<span >总参与人数:${participatedCount }</span>
+			<span >取消参与人数:${cancelCount }</span>
 		</reps:footbar>
 	</reps:panel>
 	<reps:panel id="mybody" dock="center">

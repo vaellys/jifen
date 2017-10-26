@@ -93,6 +93,7 @@ public class TeacherPointsAssignRest extends RestBaseController{
 				aggregate.setLevel((short) 0);
 				aggregate.setPersonName(info.getStudentName());
 				aggregate.setSchoolName(info.getSchoolName());
+				aggregate.setAvatarUrl(info.getAvatarUrl());
 				aggreateService.save(aggregate);
 			}
 			//添加学生个人记录

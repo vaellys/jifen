@@ -48,7 +48,7 @@ public class RewardUtil {
 		String sortField = jfReward.getSortField();
 		// 获取排序字段，默认按发布时间进行排序
 		if (StringUtil.isBlank(sortField) || !SORT_FIELD_MAP.containsKey(sortField)) {
-			jfReward.setSortField("createTime");
+			jfReward.setSortField("points");
 		} else {
 			jfReward.setSortField(SORT_FIELD_MAP.get(sortField));
 		}
@@ -68,7 +68,7 @@ public class RewardUtil {
 		String sortField = jfReward.getSortField();
 		// 获取排序字段，默认按发布时间进行排序
 		if (StringUtil.isBlank(sortField) || !SORT_FIELD_MAP.containsKey(sortField)) {
-			jfReward.setSortField("createTime");
+			jfReward.setSortField("points");
 		} else {
 			jfReward.setSortField(SORT_FIELD_MAP.get(sortField));
 		}
@@ -123,6 +123,7 @@ public class RewardUtil {
 				jfReward.setActivityName(pointReward.getName());
 				jfReward.setParticipatedCount(pointReward.getParticipatedCount());
 				jfReward.setIsShown(pointReward.getIsShown());
+				jfReward.setPoints(pointReward.getPoints());
 				String picture = pointReward.getPicture();
 				if(StringUtil.isNotBlank(picture)) {
 					jfReward.setPicture(imageServerPath + picture);
