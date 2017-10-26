@@ -44,7 +44,17 @@
 			 <reps:formfield label="图片" fullRow="true">
 				<img name="img" width="128px",height="128px" src="${imagePath}${activity.picture}"/> <br>
 				<input type="hidden" id="pic" name="picture" value="${activity.picture }"/>
-				<reps:upload id="pictureid" callBack="getPathName" value="上传图片"  flagAbsolute="true"  path="${imageUploadPath}/jifen/activity" cssClass="uploading-a" fileType="png,jpg" coverage="true" size="2"></reps:upload>
+				<reps:upload id="pictureid" callBack="getPathName" value="上传图片"  flagAbsolute="true"  path="${imageUploadPath}/jifen/activity" cssClass="uploading-a" fileType="png,jpg" coverage="true" size="2" reName="true"></reps:upload>
+           </reps:formfield>
+           
+           <reps:formfield label="是否推广" fullRow="true">
+				<reps:select id="isTop" name="isTop" jsonData="{'0':'否','1':'是'}" >${activity.isTop }</reps:select>
+		   </reps:formfield>
+           
+           <reps:formfield label="首页推广图片" labelStyle="width:15%" textStyle="width:30%;">
+				<img name="topImg" width="128px",height="128px" src="${imagePath}${activity.topImage}"/> <br>
+				<input type="hidden" name="topImage" id="topImage" value="${activity.topImage }"/>
+				<reps:upload id="topImageId" callBack="getTopImage" value="上传图片"  flagAbsolute="true"  path="${imageUploadPath}/jifen/top" cssClass="uploading-a" fileType="png,jpg" coverage="true" size="2" reName="true"></reps:upload>
            </reps:formfield>
 		</reps:formcontent>
 		<br/>
@@ -70,6 +80,13 @@
 		var picture = path.replace("${imageUploadPath}","");
 		$("input[name='picture']").val(picture);
 		$("img[name='img']").attr("src", "${imagePath}" + picture);
+	};
+	
+	var getTopImage = function(filename, fileType, fileSize, path) {
+		path = path.replaceAll("\\\\","/");
+		var picture = path.replace("${imageUploadPath}","");
+		$("input[name='topImage']").val(picture);
+		$("img[name='topImg']").attr("src", "${imagePath}" + picture);
 	};
 	
 	function checkFieldParams(){

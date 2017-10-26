@@ -90,6 +90,7 @@ public class PointsAggregateServiceImpl implements IPointsAggregateService {
 			}
 			//获取总数
 			long count = mongoTemplate.count(query, PointsAggregate.class);
+			query.with(new Sort(new Order(Direction.DESC, "totalPoints")));
 			List<PointsAggregate> pointsCollectList = mongoTemplate.find(query, PointsAggregate.class);
 			if (null == pointsCollectList) {
 				throw new RepsException("mongodb查询失败");

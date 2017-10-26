@@ -74,6 +74,14 @@ public class ActivityReward extends IdEntity implements Serializable {
 	@Column(name = "participated_count")
 	private Integer participatedCount;
 	
+	/** 首页推广图片 */
+	@Column(name = "top_image", length = 180)
+	private String topImage;
+	
+	/** 是否推广   0:不推广  1:推广  */
+	@Column(name = "is_top")
+	private Short isTop;
+	
 	/** 删除标识 1：有效（默认值），9：删除 */
 	@Column(name = "valid_record")
 	private Short validRecord;
@@ -280,6 +288,22 @@ public class ActivityReward extends IdEntity implements Serializable {
 
 	public void setEndTimeDisp(String endTimeDisp) {
 		this.endTimeDisp = endTimeDisp;
+	}
+
+	public String getTopImage() {
+		return topImage;
+	}
+
+	public void setTopImage(String topImage) {
+		this.topImage = topImage;
+	}
+
+	public Short getIsTop() {
+		return isTop;
+	}
+
+	public void setIsTop(Short isTop) {
+		this.isTop = isTop;
 	}
 	
 }

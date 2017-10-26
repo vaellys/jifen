@@ -140,6 +140,14 @@ public class ActivityRewardServiceImpl implements IActivityRewardService {
 	    if(null != isShown) {
 	    	pointReward.setIsShown(isShown);
 	    }
+	    Short isTop = jfReward.getIsTop();
+	    if(null != isTop) {
+	    	pointReward.setIsTop(isTop);
+	    }
+	    String topImage = jfReward.getTopImage();
+	    if(StringUtil.isNotBlank(topImage)) {
+	    	pointReward.setTopImage(topImage);
+	    }
 		dao.update(pointReward);
 	}
 

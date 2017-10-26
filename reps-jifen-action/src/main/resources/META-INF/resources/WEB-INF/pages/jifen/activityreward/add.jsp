@@ -41,11 +41,22 @@
 				<reps:input name="description" maxLength="200" multiLine="true" style="width:515px;height:70px" required="true"></reps:input>
 			</reps:formfield>
 			
-			<reps:formfield label="图片" labelStyle="width:15%" textStyle="width:30%;">
+			<reps:formfield label="图片" labelStyle="width:15%" textStyle="width:30%;" fullRow="true">
 				<img name="img" width="128px",height="128px"/> <br>
 				<reps:upload id="pictureid" callBack="getPathName" value="上传图片"  flagAbsolute="true"  path="${imageUploadPath}/jifen/activity" cssClass="uploading-a" fileType="png,jpg" coverage="true" size="2" reName="true"></reps:upload>
-				<span id="tips"><font color="red">只能上传(png、jpg)格式,建议尺寸（200x240）2M以内</font></span>
+				<span id="tips"><font color="red">只能上传(png、jpg)格式,建议尺寸（480x420）2M以内</font></span>
 				<input type="hidden" name="picture" id="pic"/>
+           </reps:formfield>
+           
+           <reps:formfield label="是否推广" fullRow="true">
+				<reps:select id="isTop" name="isTop" jsonData="{'0':'否','1':'是'}" />
+		   </reps:formfield>
+           
+           <reps:formfield label="首页推广图片" labelStyle="width:15%" textStyle="width:30%;">
+				<img name="topImg" width="128px",height="128px"/> <br>
+				<reps:upload id="topImageId" callBack="getTopImage" value="上传图片"  flagAbsolute="true"  path="${imageUploadPath}/jifen/top" cssClass="uploading-a" fileType="png,jpg" coverage="true" size="2" reName="true"></reps:upload>
+				<span id="topImageTips"><font color="red">只能上传(png、jpg)格式,建议尺寸（620x350）2M以内</font></span>
+				<input type="hidden" name="topImage" id="topImage"/>
            </reps:formfield>
 		</reps:formcontent>
 		<br/>
@@ -72,6 +83,14 @@
 		$("input[name='picture']").val(picture);
 		$("img[name='img']").attr("src", "${imagePath}" + picture);
 		$('#tips').html("");
+	};
+	
+	var getTopImage = function(filename, fileType, fileSize, path) {
+		path = path.replaceAll("\\\\","/");
+		var picture = path.replace("${imageUploadPath}","");
+		$("input[name='topImage']").val(picture);
+		$("img[name='topImg']").attr("src", "${imagePath}" + picture);
+		$('#topImageTips').html("");
 	};
 	
 	function checkFieldParams(){

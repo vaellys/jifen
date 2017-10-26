@@ -75,6 +75,7 @@ public class TeacherPointsAssignRest extends RestBaseController{
 					|| StringUtils.isBlank(info.getRuleName())
 					|| StringUtils.isBlank(info.getRuleId())
 					|| StringUtils.isBlank(info.getUrl())
+					|| StringUtils.isBlank(info.getAvatarUrl())
 					|| info.getMark() == null || info.getPoints() == null) {
 	
 					result.setMessage("请求参数错误");

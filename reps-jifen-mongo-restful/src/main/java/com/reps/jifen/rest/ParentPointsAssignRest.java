@@ -80,6 +80,7 @@ public class ParentPointsAssignRest extends RestBaseController {
 					|| StringUtils.isBlank(info.getRuleName())
 					|| StringUtils.isBlank(info.getRuleId())
 					|| StringUtils.isBlank(info.getType())
+					|| StringUtils.isBlank(info.getAvatarUrl())
 					|| info.getPoints() == null) {
 
 				result.setMessage("请求参数错误");

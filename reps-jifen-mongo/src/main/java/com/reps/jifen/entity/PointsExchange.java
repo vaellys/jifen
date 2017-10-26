@@ -62,6 +62,9 @@ public class PointsExchange implements Serializable{
 	/**订单id*/
 	private String orderId;
 	
+	/**订单号*/
+	private String orderNum;
+	
 	/**1:物品兑换  2:活动*/
 	private Short type;
 
@@ -159,6 +162,14 @@ public class PointsExchange implements Serializable{
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getOrderNum() {
+		return orderNum;
+	}
+
+	public void setOrderNum(String orderNum) {
+		this.orderNum = orderNum;
 	}
 
 	@Override

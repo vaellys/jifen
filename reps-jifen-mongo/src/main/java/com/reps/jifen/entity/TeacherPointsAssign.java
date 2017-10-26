@@ -3,6 +3,8 @@ package com.reps.jifen.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Transient;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -56,6 +58,7 @@ public class TeacherPointsAssign implements Serializable{
 	private String url;
 	
 	/** 头像地址 */
+	@Transient
 	private String avatarUrl;
 	
 	public String getTeacherId() {

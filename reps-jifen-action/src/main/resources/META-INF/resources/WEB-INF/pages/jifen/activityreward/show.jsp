@@ -28,6 +28,10 @@
 					labelStyle="width:20%;">${activity.description }</reps:detailfield>
 				<reps:detailfield label="图片" fullRow="true"
 					labelStyle="width:20%;"><img name="img" width="128px",height="128px" src="${imagePath}${activity.picture}"/></reps:detailfield>
+				<reps:detailfield label="是否推广" fullRow="true"
+					labelStyle="width:20%;"><c:if test="${activity.isTop == '1'}">是</c:if><c:if test="${activity.isTop == '0' }">否</c:if></reps:detailfield>	
+				<reps:detailfield label="首页推广图片" fullRow="true"
+					labelStyle="width:20%;"><img name="topImage" width="128px",height="128px" src="${imagePath}${activity.topImage}"/></reps:detailfield>
 			</reps:detail>
 			<reps:formbar>
 				<reps:button cssClass="btn_back" type="button" onClick="back()"

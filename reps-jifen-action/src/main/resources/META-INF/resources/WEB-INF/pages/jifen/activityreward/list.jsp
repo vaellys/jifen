@@ -20,6 +20,9 @@
 			<reps:formfield label="活动状态" labelStyle="width:23%;" textStyle="width:30%;">
 				<reps:select name="isShown" jsonData="{'':'全部','0':'未发布','1':'进行中','2':'已结束','3':'已取消'}">${jfReward.isShown }</reps:select>
 			</reps:formfield>
+			<reps:formfield label="是否推广" labelStyle="width:20%;" textStyle="width:27%;">
+				<reps:select name="isTop" jsonData="{'':'全部','0':'否','1':'是'}">${jfReward.isTop }</reps:select>
+			</reps:formfield>
 			<%-- <reps:formfield label="兑换截至时间"><reps:datepicker name="finishTimeDisp" format="yyyy-MM-dd" /></reps:formfield> --%>
 		</reps:formcontent>
 		<reps:querybuttons>
@@ -49,6 +52,7 @@
 				<%-- <reps:gridfield title="活动详情" width="30" >${activity.description}</reps:gridfield> --%>
 				<reps:gridfield title="参与人数" width="15" align="center">${empty activity.participatedCount ? 0 : activity.participatedCount}</reps:gridfield>
 				<reps:gridfield title="活动状态" width="15" align="center"><c:if test="${activity.isShown == '1'}">进行中</c:if><c:if test="${activity.isShown == '0' }">未发布</c:if><c:if test="${activity.isShown == '2' }">已结束</c:if><c:if test="${activity.isShown == '3' }">已取消</c:if></reps:gridfield>
+				<reps:gridfield title="是否推广" width="15" align="center"><c:if test="${activity.isTop == '1'}">是</c:if><c:if test="${activity.isTop == '0' }">否</c:if></reps:gridfield>
 				<%-- <reps:gridfield title="已参与/已兑换" width="25" align="center"></reps:gridfield> --%>
 				<reps:gridfield title="操作" width="50">
 					<reps:button cssClass="detail-table" action="show.mvc?id=${activity.id }" value="详细"></reps:button>
@@ -123,8 +127,10 @@
 	
 	var checkFinishTime = function(obj){
 		var currentTime = new Date();
+		currentTime = currentTime.getFullYear()+"-"+((currentTime.getMonth()+1) < 10 ? "0" : "") + (currentTime.getMonth() + 1) + "-" + (currentTime.getDate() < 10 ? "0" : "") + currentTime.getDate() + " 00:00:00";
 		var finishTime = $(obj).parents("tr").find("input[name='finishTime']").val();
 		finishTime = new Date(finishTime);
+		currentTime = new Date(currentTime);
 		if(finishTime.getTime() < currentTime.getTime()){
 			messager.info("报名截止时间小于当前时间,请修改截止时间后再发布！");
 			return false;

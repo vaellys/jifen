@@ -74,6 +74,10 @@ public class ActivityRewardDao {
 			if (null != isShown) {
 				dc.add(Restrictions.eq("isShown", isShown));
 			}
+			Short isTop = jfReward.getIsTop();
+			if(null != isTop) {
+				dc.add(Restrictions.eq("isTop", isTop));
+			}
 			Integer pointsBegin = jfReward.getPointBegin();
 			if (null != pointsBegin) {
 				dc.add(Restrictions.ge("points", pointsBegin));

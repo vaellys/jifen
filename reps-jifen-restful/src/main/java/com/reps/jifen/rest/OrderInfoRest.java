@@ -245,6 +245,7 @@ public class OrderInfoRest extends RestBaseController {
 		paramMap.put("schoolId", info.getSchoolId());
 		paramMap.put("schoolName", info.getSchoolName());
 		paramMap.put("orderId", info.getId());
+		paramMap.put("orderNum", info.getOrderNo());
 		paramMap.put("type", ORDER_TYPE);
 		String params = ConvertUrlUtil.convertByMap(paramMap);
 		return HttpRequstUtil.getPostUrlResponse(mongoUrl + UrlConstant.SAVE_EXCHANGE + "?access_token=" + accessToken, params);
